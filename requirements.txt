@@ -1,0 +1,25 @@
+# 法律文件 RAG — 依賴套件
+# 安裝：pip install -r requirements.txt
+
+# PDF 解析
+pymupdf>=1.24.0
+
+# 本地 Embedding 模型（BAAI/bge-m3，首次執行自動下載）
+sentence-transformers>=3.0.0
+
+# 向量資料庫（FAISS，本地檔案型索引）
+faiss-cpu>=1.8.0
+
+# 混合檢索
+rank-bm25>=0.2.2       # BM25 稀疏檢索
+jieba>=0.42.1          # 中文斷詞
+
+# HTTP 客戶端（呼叫 Ollama）
+httpx>=0.27.0
+
+# REST API（加分項）
+fastapi>=0.111.0
+uvicorn>=0.30.0
+
+# 基礎數值運算
+numpy>=1.26.0

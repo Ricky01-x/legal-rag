@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# Vector store (binary, rebuild with ingest.py)
+vector_store/
+
+# Source PDF (copyright)
+data/
+
+# macOS
+.DS_Store

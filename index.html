@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>性騷擾防治法 · AI 法律知識檢索系統</title>
+<style>
+:root{
+  --bg:#09090f;--surf:#111119;--surf2:rgba(255,255,255,.05);--surf3:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+  --text:#e2e8f0;--muted:#64748b;--muted2:#94a3b8;
+  --primary:#818cf8;--primary-d:#6366f1;--accent:#34d399;--warn:#fbbf24;--danger:#f87171;
+  --grad:linear-gradient(135deg,#6366f1,#8b5cf6,#22d3ee);
+  --grad-text:linear-gradient(135deg,#a5b4fc,#c084fc,#67e8f9);
+  --code-bg:#0d1117;
+  --radius:12px;--radius-lg:20px;
+  --nav-w:220px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.7;
+  display:flex;min-height:100vh;
+}
+
+/* ── Sidebar Nav ───────────────────────── */
+.sidenav{
+  width:var(--nav-w);flex-shrink:0;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  padding:28px 16px;
+  border-right:1px solid var(--border);
+  background:var(--surf);
+}
+.sidenav::-webkit-scrollbar{width:3px}
+.sidenav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.nav-brand{
+  font-size:13px;font-weight:800;color:var(--text);
+  margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--grad-text);flex-shrink:0}
+.nav-section{margin-bottom:20px}
+.nav-section-title{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;padding:0 8px;
+}
+.nav-link{
+  display:block;padding:6px 8px;border-radius:6px;
+  font-size:13px;color:var(--muted2);text-decoration:none;
+  transition:background .15s,color .15s;line-height:1.4;
+}
+.nav-link:hover,.nav-link.active{background:var(--surf3);color:var(--text)}
+.nav-link.sub{padding-left:20px;font-size:12px}
+
+/* ── Main Content ──────────────────────── */
+.main{flex:1;min-width:0;max-width:860px;padding:0 48px 100px;margin:0 auto}
+
+/* ── Hero ──────────────────────────────── */
+.hero{
+  padding:80px 0 64px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:64px;
+  position:relative;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 0% 50%,rgba(99,102,241,.12) 0,transparent 60%),
+    radial-gradient(ellipse at 100% 20%,rgba(139,92,246,.08) 0,transparent 50%);
+}
+.hero>*{position:relative;z-index:1}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.tag{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;
+}
+.tag-blue{background:rgba(99,102,241,.18);color:#a5b4fc;border:1px solid rgba(99,102,241,.3)}
+.tag-green{background:rgba(52,211,153,.12);color:#6ee7b7;border:1px solid rgba(52,211,153,.2)}
+.tag-cyan{background:rgba(34,211,238,.12);color:#67e8f9;border:1px solid rgba(34,211,238,.2)}
+
+.hero h1{
+  font-size:clamp(32px,5vw,52px);font-weight:900;line-height:1.1;
+  letter-spacing:-1px;margin-bottom:16px;
+}
+.grad-text{
+  background:var(--grad-text);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:18px;color:var(--muted2);margin-bottom:40px;max-width:600px;line-height:1.65}
+
+.stat-row{display:flex;gap:40px;flex-wrap:wrap;padding:28px 0;border-top:1px solid var(--border)}
+.stat{text-align:center}
+.stat-val{font-size:36px;font-weight:900;line-height:1}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* ── Sections ──────────────────────────── */
+.section{padding:56px 0;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+
+.sec-label{
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--primary);margin-bottom:8px;
+}
+h2{font-size:clamp(22px,3vw,30px);font-weight:800;margin-bottom:12px;line-height:1.2}
+h3{font-size:18px;font-weight:700;margin:36px 0 10px;color:var(--text)}
+h4{font-size:15px;font-weight:700;margin:24px 0 8px;color:var(--muted2)}
+p{color:var(--muted2);margin-bottom:14px;font-size:15px}
+p:last-child{margin-bottom:0}
+
+/* ── Code ──────────────────────────────── */
+pre{
+  background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.6;
+}
+code{font-family:'SF Mono',Consolas,'Courier New',monospace;font-size:.875em}
+pre code{font-size:13px;color:#c9d1d9}
+:not(pre)>code{
+  background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:4px;
+  padding:2px 6px;font-size:.8em;color:#a5b4fc;
+}
+.comment{color:#6e7681}
+.kw{color:#ff7b72}
+.str{color:#a5d6ff}
+.fn{color:#d2a8ff}
+.num{color:#79c0ff}
+
+/* ── Tables ────────────────────────────── */
+.tbl-wrap{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{
+  text-align:left;padding:10px 14px;
+  background:var(--surf2);color:var(--muted2);font-weight:600;font-size:12px;
+  border-bottom:1px solid var(--border2);letter-spacing:.5px;text-transform:uppercase;
+}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--muted2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td strong{color:var(--text);font-weight:600}
+td.hit{color:var(--accent)}
+td.miss{color:var(--danger)}
+td.score{color:var(--text);font-weight:700}
+
+/* ── Cards / Callouts ──────────────────── */
+.card{
+  background:var(--surf2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;margin:16px 0;
+}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:16px 0}
+.card h4{margin-top:0}
+
+.callout{
+  border-radius:var(--radius);padding:16px 20px;margin:16px 0;
+  border-left:3px solid;font-size:14px;
+}
+.callout-blue{background:rgba(99,102,241,.08);border-color:#6366f1;color:#c7d2fe}
+.callout-green{background:rgba(52,211,153,.07);border-color:#10b981;color:#6ee7b7}
+.callout-warn{background:rgba(251,191,36,.07);border-color:#fbbf24;color:#fde68a}
+.callout strong{color:inherit;font-weight:700}
+
+/* ── Score bars ────────────────────────── */
+.score-bars{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+.score-row{display:flex;align-items:center;gap:12px;font-size:13px}
+.score-lbl{width:90px;color:var(--muted2);flex-shrink:0}
+.score-track{flex:1;height:8px;background:var(--surf3);border-radius:4px;overflow:hidden}
+.score-fill{height:100%;border-radius:4px;background:var(--grad);transition:width .8s ease}
+.score-num{width:72px;text-align:right;color:var(--text);font-weight:700}
+.score-delta{width:48px;text-align:right;font-size:12px;color:var(--accent)}
+
+/* ── Version cards ─────────────────────── */
+.ver-timeline{display:flex;flex-direction:column;gap:0;margin:16px 0;border-left:2px solid var(--border2);padding-left:24px}
+.ver-item{padding:20px 0;position:relative}
+.ver-item::before{
+  content:'';position:absolute;left:-30px;top:26px;
+  width:12px;height:12px;border-radius:50%;border:2px solid var(--primary-d);
+  background:var(--bg);
+}
+.ver-item.latest::before{background:var(--primary-d)}
+.ver-badge{
+  display:inline-block;padding:3px 10px;border-radius:4px;font-size:12px;font-weight:700;
+  background:var(--surf2);border:1px solid var(--border);color:var(--primary);
+  margin-bottom:8px;
+}
+.ver-item.latest .ver-badge{background:rgba(99,102,241,.2);border-color:rgba(99,102,241,.4)}
+.ver-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.ver-body{font-size:14px;color:var(--muted2)}
+
+/* ── Q&A blocks ────────────────────────── */
+.qa-block{background:var(--surf);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;margin:20px 0}
+.qa-question{font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.qa-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.qa-tag{padding:3px 10px;border-radius:4px;font-size:12px;font-weight:600;background:var(--surf3);border:1px solid var(--border);color:var(--muted2)}
+.qa-versions{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.qa-ver{display:flex;gap:14px;align-items:flex-start}
+.qa-ver-badge{
+  flex-shrink:0;width:56px;padding:3px 0;text-align:center;
+  border-radius:4px;font-size:11px;font-weight:800;letter-spacing:.5px;
+  background:var(--surf3);color:var(--muted2);
+}
+.qa-ver-badge.v31{background:rgba(99,102,241,.2);color:#a5b4fc}
+.qa-ver-body{font-size:13px;color:var(--muted2);flex:1;padding-top:2px}
+.qa-ver-score{
+  flex-shrink:0;font-size:18px;font-weight:900;line-height:1;
+  padding-top:2px;min-width:56px;text-align:right;
+}
+
+/* ── CLI showcase ──────────────────────── */
+.cli-block{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:16px 0}
+.cli-header{
+  padding:10px 16px;border-bottom:1px solid var(--border);
+  font-size:12px;font-weight:600;color:var(--muted);
+  display:flex;align-items:center;gap:8px;
+}
+.cli-dot{width:10px;height:10px;border-radius:50%}
+.cli-body{padding:16px;font-family:'SF Mono',Consolas,monospace;font-size:13px;line-height:1.65;overflow-x:auto}
+.cli-prompt{color:#7c3aed}
+.cli-cmd{color:#c9d1d9}
+.cli-out{color:#6e7681}
+.cli-highlight{color:var(--accent)}
+.cli-warn{color:var(--warn)}
+
+/* ── API endpoint ──────────────────────── */
+.endpoint{background:var(--surf2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin:12px 0}
+.endpoint-method{display:inline-block;padding:2px 10px;border-radius:4px;font-size:12px;font-weight:800;letter-spacing:.5px;margin-right:10px;font-family:monospace}
+.method-get{background:rgba(52,211,153,.15);color:#6ee7b7;border:1px solid rgba(52,211,153,.2)}
+.method-post{background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.2)}
+.endpoint-path{font-family:monospace;font-size:14px;color:var(--text);font-weight:600}
+.endpoint-desc{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* ── Misc ──────────────────────────────── */
+.divider{height:1px;background:var(--border);margin:32px 0}
+.text-accent{color:var(--accent)}
+.text-primary{color:var(--primary)}
+.text-warn{color:var(--warn)}
+.text-danger{color:var(--danger)}
+ul,ol{padding-left:20px;color:var(--muted2);font-size:15px}
+li{margin-bottom:6px}
+li strong{color:var(--text)}
+.formula{
+  background:var(--surf2);border:1px solid var(--border);border-radius:8px;
+  padding:14px 20px;font-family:monospace;font-size:14px;color:var(--accent);
+  text-align:center;margin:16px 0;
+}
+
+@media(max-width:768px){
+  .sidenav{display:none}
+  .main{padding:0 20px 60px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar ─────────────────────────────────────── -->
+<nav class="sidenav">
+  <div class="nav-brand"><div class="dot"></div>法律 RAG 系統</div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">概覽</div>
+    <a class="nav-link" href="#hero">專案簡介</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">資料處理</div>
+    <a class="nav-link" href="#parsing">PDF 解析</a>
+    <a class="nav-link" href="#chunking">Chunk 切分邏輯</a>
+    <a class="nav-link" href="#tags">語意標籤嵌入</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">模型選擇</div>
+    <a class="nav-link" href="#embed-model">Embedding 模型</a>
+    <a class="nav-link" href="#llm-model">LLM 模型</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">向量資料庫</div>
+    <a class="nav-link" href="#faiss">FAISS HNSW</a>
+    <a class="nav-link" href="#metric">距離度量選擇</a>
+    <a class="nav-link" href="#bm25">BM25 混合設計</a>
+    <a class="nav-link" href="#rrf">三層 RRF</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">回答策略</div>
+    <a class="nav-link" href="#decompose">問題拆解</a>
+    <a class="nav-link" href="#facts">事實提取</a>
+    <a class="nav-link" href="#pipeline">完整 Pipeline</a>
+    <a class="nav-link" href="#hallucination">防幻覺三道防線</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">壓力測試</div>
+    <a class="nav-link" href="#test-design">測試設計邏輯</a>
+    <a class="nav-link" href="#evolution">版本演進歷程</a>
+    <a class="nav-link" href="#summary">版本對比總表</a>
+    <a class="nav-link" href="#q1">Q1：時效＋申訴管道</a>
+    <a class="nav-link" href="#q2">Q2：三層責任</a>
+    <a class="nav-link" href="#q3">Q3：調解程序鏈</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">使用教學</div>
+    <a class="nav-link" href="#setup">環境建置</a>
+    <a class="nav-link" href="#cli">CLI 使用</a>
+    <a class="nav-link" href="#api">REST API</a>
+  </div>
+</nav>
+
+<!-- ── Main ───────────────────────────────────────── -->
+<div class="main">
+
+<!-- Hero -->
+<div class="hero" id="hero">
+  <div class="hero-tags">
+    <span class="tag tag-blue">Adaptive Hybrid RAG</span>
+    <span class="tag tag-green">完全離線</span>
+    <span class="tag tag-cyan">v3.1</span>
+  </div>
+  <h1>性騷擾防治法<br><span class="grad-text">AI 法律知識檢索系統</span></h1>
+  <p class="hero-sub">基於本地 LLM 的 Adaptive RAG 問答系統。接受自然語言問題，在性騷擾防治法全文中執行混合語意檢索，由本地模型生成附條號引用的法律答案。不依賴任何雲端 API，完全離線執行。</p>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-val grad-text">83</div><div class="stat-lbl">/ 100 壓力測試平均分</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--accent)">+46</div><div class="stat-lbl">四版迭代進步分數</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--primary)">34</div><div class="stat-lbl">條法條完整建庫</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--warn)">6</div><div class="stat-lbl">最多子查詢（複雜問題）</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  資料處理                              -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="section" id="parsing">
+  <div class="sec-label">資料處理 · 01</div>
+  <h2>PDF 解析流程</h2>
+  <p>原始資料來源為全國法規資料庫的官方 PDF（民國 112 年 08 月 16 日修正版），使用 PyMuPDF（fitz）逐頁提取文字。</p>
+
+  <h3>清洗步驟</h3>
+  <p>PDF 每頁包含三種雜訊需要移除：</p>
+  <ul>
+    <li><strong>頁眉文字：</strong>全國法規資料庫的中英文 logo 文字，出現在每一頁頂部</li>
+    <li><strong>標頭列：</strong>「法規名稱：性騷擾防治法」與「修正日期：民國 112 年 08 月 16 日」兩列</li>
+    <li><strong>多餘空白：</strong>連續空格壓縮為一個、多餘空行合併為單一換行</li>
+  </ul>
+  <p>清洗結果：原始提取 7,146 字元 → 清洗後 6,938 字元，移除 208 字元的無效頁眉。法條文字本身 <strong>不做任何修改</strong>。</p>
+
+  <div class="callout callout-blue">
+    <strong>設計原則：</strong>清洗只移除格式雜訊，不重新排版或合併段落。法條原文保持一字不差，確保 LLM 引用時與原文完全一致。
+  </div>
+</div>
+
+<div class="section" id="chunking">
+  <div class="sec-label">資料處理 · 02</div>
+  <h2>Chunk 切分邏輯</h2>
+
+  <h3>切分單位：以法條（第 N 條）為基本單位</h3>
+  <p>每一條法條對應一個 Chunk，全文 34 條 = 34 個 Chunks。</p>
+
+  <h3>為什麼不用固定字數切分？</h3>
+  <p>常見的 RAG 做法是每 512 個 token 切一段，但對法律文件不適用：</p>
+  <div class="card-grid">
+    <div class="card">
+      <h4>❌ 固定字數切分的問題</h4>
+      <p>一條法條可能被切成「第一項（條件）」和「第二項（結果）」兩個 chunk，LLM 看到的是不完整的法律推論結構，條件和效果分離。</p>
+    </div>
+    <div class="card">
+      <h4>✓ 法條為單位的優勢</h4>
+      <p>每條法條本身是「條件 → 法律效果」的完整語意單位。第14條包含完整的申訴管道規定，不切開才能保留完整的款項對應關係。</p>
+    </div>
+  </div>
+
+  <h3>法條長度統計</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>統計項目</th><th>數值</th></tr>
+    <tr><td>平均每條字數</td><td>約 180 字</td></tr>
+    <tr><td>最長法條</td><td>第14條，553 字（申訴管道，6款規定）</td></tr>
+    <tr><td>最短法條</td><td>第33條，17 字（施行日期授權）</td></tr>
+    <tr><td>總 Chunk 數</td><td>34 個</td></tr>
+  </table></div>
+
+  <p>最長 553 字遠低於任何 LLM 的 token 限制，且法律語意邊界清楚，不需要 overlap 設計。</p>
+
+  <h3>Chunk Metadata 設計</h3>
+  <p>每個 Chunk 儲存兩層定位資訊：章（第幾章 + 中文名稱）與條（第幾條），讓回答時可精確引用「第四章 申訴及調查程序 第14條」。</p>
+  <pre><code>{
+  <span class="str">"chunk_id"</span>   : <span class="num">13</span>,
+  <span class="str">"chapter_num"</span>: <span class="num">4</span>,
+  <span class="str">"chapter"</span>    : <span class="str">"第四章 申訴及調查程序"</span>,
+  <span class="str">"article_num"</span>: <span class="num">14</span>,
+  <span class="str">"article"</span>    : <span class="str">"第 14 條"</span>,
+  <span class="str">"text"</span>       : <span class="str">"性騷擾事件被害人除可依相關法律請求協助外..."</span>,  <span class="comment">// 法條原文（送 LLM 用）</span>
+  <span class="str">"tags"</span>       : [<span class="str">"申訴時效"</span>, <span class="str">"未成年人"</span>, <span class="str">"權勢性騷擾"</span>, <span class="str">"知悉後期限"</span>],
+  <span class="str">"embed_text"</span> : <span class="str">"[申訴時效][未成年人][權勢性騷擾]... 性騷擾事件被害人..."</span>  <span class="comment">// 建索引用</span>
+}</code></pre>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>章節</th><th>條數</th></tr>
+    <tr><td>第一章 總則</td><td>6 條（第1-6條）</td></tr>
+    <tr><td>第二章 性騷擾之防治及責任</td><td>3 條（第7-9條）</td></tr>
+    <tr><td>第三章 被害人保護</td><td>4 條（第10-13條）</td></tr>
+    <tr><td>第四章 申訴及調查程序</td><td>4 條（第14-17條）</td></tr>
+    <tr><td>第五章 調解程序</td><td>7 條（第18-24條）</td></tr>
+    <tr><td>第六章 罰則</td><td>6 條（第25-30條）</td></tr>
+    <tr><td>第七章 附則</td><td>4 條（第31-34條）</td></tr>
+    <tr><td><strong>總計</strong></td><td><strong>34 個 Chunks</strong></td></tr>
+  </table></div>
+</div>
+
+<div class="section" id="tags">
+  <div class="sec-label">資料處理 · 03</div>
+  <h2>語意標籤嵌入（Semantic Tag Enrichment）</h2>
+
+  <h3>問題背景</h3>
+  <p>某些法條的原始文字和查詢詞之間的語意距離較遠。例如第25條的原文是「意圖性騷擾，乘人不備，以強吻、擁抱或撫摸其臀部、胸部或其他身體隱私處⋯」——當查詢「刑事責任」時，向量相似度偏低，法條容易被排在後面。</p>
+
+  <h3>解決方案：Ingest 時生成語意標籤</h3>
+  <p>在建庫（ingest）階段，讓 LLM 閱讀每條法條，生成 6-8 個涵蓋責任類型、行為主體、核心法律效果的語意標籤，拼接在原文前方作為 <code>embed_text</code>：</p>
+
+  <div class="formula">embed_text = "[標籤1][標籤2][標籤3]... " + 法條原文</div>
+
+  <div class="callout callout-green">
+    <strong>關鍵設計：雙欄位分離</strong><br>
+    <code>chunk["text"]</code> 保持純淨法條原文（送 LLM 時用，避免標籤汙染答案）<br>
+    <code>chunk["embed_text"]</code> = 標籤 + 原文（建立 FAISS 和 BM25 索引用）<br>
+    查詢時不需要任何標籤處理，向量自然找到語意最近的 chunk。
+  </div>
+
+  <h3>標籤生成示例</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>法條</th><th>生成的語意標籤</th></tr>
+    <tr><td>第25條</td><td>刑事責任、行為人、性騷擾犯罪、告訴乃論、罰金、<strong>有期徒刑</strong>、權勢利用、加重處罰</td></tr>
+    <tr><td>第27條</td><td>行政罰鍰、行為人責任、性騷擾違法、主管機關裁決、時效限制、刑事以外處罰</td></tr>
+    <tr><td>第28條</td><td>行政罰鍰、限期改正、按次處罰、機構責任、主管機關處罰</td></tr>
+    <tr><td>第29條</td><td>行政罰鍰、行為人違法、限期改正、<strong>差別待遇</strong>、雇主違反、按次處罰</td></tr>
+    <tr><td>第14條</td><td>申訴時效、未成年人、被害人保護、知悉後期限、成年後起算、權勢性騷擾</td></tr>
+  </table></div>
+
+  <h3>為什麼在 Ingest 時做，而不是 Query 時？</h3>
+  <p>若在查詢時讓 LLM 為查詢生成關鍵字再去配對 chunk 標籤（query-side matching），一旦關鍵字不精確就會刷掉正確 chunk（brittle）。Ingest 時生成標籤後融入向量，查詢端只需要直接 embed 自然語言，無需任何特殊處理。</p>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  模型選擇                              -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="section" id="embed-model">
+  <div class="sec-label">模型選擇 · 01</div>
+  <h2>Embedding 模型：BAAI/bge-m3</h2>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>規格</th><th>值</th></tr>
+    <tr><td>向量維度</td><td><strong>1024</strong>（float32）</td></tr>
+    <tr><td>正規化</td><td>L2 正規化（normalize_embeddings=True）</td></tr>
+    <tr><td>模型大小</td><td>~570MB（首次執行自動下載，之後離線）</td></tr>
+    <tr><td>推理記憶體</td><td>~1GB</td></tr>
+    <tr><td>線程安全</td><td>✓（PyTorch 計算時釋放 GIL，支援 asyncio + run_in_executor 並行）</td></tr>
+  </table></div>
+
+  <h3>選擇理由</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h4>繁體中文 SOTA</h4>
+      <p>bge-m3 是 BAAI 專為多語言設計的模型，在繁體中文法律術語語意理解上優於同量級的其他 embedding 模型。</p>
+    </div>
+    <div class="card">
+      <h4>1024 維的優勢</h4>
+      <p>法律語意細粒度區分需要高維度。相比常見的 384 維模型（如 all-MiniLM），1024 維在近似相似的法條之間有更清晰的語意邊界。</p>
+    </div>
+    <div class="card">
+      <h4>完全離線</h4>
+      <p>首次下載後永久本地快取。不依賴 OpenAI Embedding API，無使用成本、無隱私疑慮、無網路依賴。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="llm-model">
+  <div class="sec-label">模型選擇 · 02</div>
+  <h2>LLM 模型：qwen2.5:14b</h2>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>規格</th><th>值</th></tr>
+    <tr><td>量化版本</td><td>Q4（Ollama 預設）</td></tr>
+    <tr><td>記憶體需求</td><td>約 9GB（24GB 統一記憶體尚有充足 buffer）</td></tr>
+    <tr><td>Context Window</td><td>128K tokens</td></tr>
+    <tr><td>推理速度</td><td>約 20-40 token/s（Apple Silicon Metal 加速）</td></tr>
+    <tr><td>用途</td><td>① Fact Extraction + Query Decomposition ② 答案生成</td></tr>
+  </table></div>
+
+  <h3>選擇理由</h3>
+  <ul>
+    <li><strong>繁體中文理解：</strong>Qwen2.5 系列對繁體中文法律術語的理解顯著優於同量級的 Gemma3 / Llama3，在「據第14條第3項第1款」這種精確引用格式上輸出穩定</li>
+    <li><strong>指令遵守能力：</strong>14B 參數足以嚴格遵守「只能引用法條原文、不得使用外部知識」的系統規則。7B 以下模型在多輪長 context 下遵守率顯著下降</li>
+    <li><strong>Ollama 原生支援：</strong>Apple Silicon Metal GPU 加速，本地推理效能穩定</li>
+    <li><strong>格式輸出穩定：</strong>FACTS+QUERIES 兩段結構需要穩定格式，14B 參數下格式成功率 &gt;95%，3B 模型常出現格式崩潰</li>
+  </ul>
+
+  <h3>可調整方向</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>模型</th><th>記憶體</th><th>預期效果</th></tr>
+    <tr><td>qwen2.5:7b</td><td>~5GB</td><td>速度約快一倍，答案品質略降，格式偶爾不穩</td></tr>
+    <tr><td><strong>qwen2.5:14b（現用）</strong></td><td><strong>~9GB</strong></td><td><strong>品質與速度的平衡點</strong></td></tr>
+    <tr><td>qwen2.5:32b</td><td>~20GB</td><td>答案品質更佳，推理速度約慢 2 倍</td></tr>
+  </table></div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!--  向量資料庫                            -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="section" id="faiss">
+  <div class="sec-label">向量資料庫 · 01</div>
+  <h2>FAISS IndexHNSWFlat</h2>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>參數</th><th>值</th><th>說明</th></tr>
+    <tr><td>索引類型</td><td><code>IndexHNSWFlat</code></td><td>精確計算（非近似），適合小資料集</td></tr>
+    <tr><td>距離度量</td><td><code>METRIC_INNER_PRODUCT</code></td><td>L2 正規化後 IP = Cosine Similarity</td></tr>
+    <tr><td>向量維度</td><td>1024</td><td>bge-m3 輸出維度，固定不可改</td></tr>
+    <tr><td>HNSW M</td><td>32</td><td>每個節點的最大連接數，建議範圍 16-64</td></tr>
+    <tr><td>efConstruction</td><td>200</td><td>建構時搜尋深度，越大越準確，建議範圍 100-400</td></tr>
+    <tr><td>efSearch</td><td>128</td><td>查詢時搜尋深度，可在查詢時動態調整</td></tr>
+  </table></div>
+
+  <h3>HNSW 原理</h3>
+  <p>Hierarchical Navigable Small World（HNSW）是一種多層圖結構的近似最近鄰演算法：</p>
+  <ul>
+    <li>每個向量是圖中的節點，M=32 表示每個節點與最多 32 個最近鄰連接</li>
+    <li>圖分多層，頂層節點稀疏（長距離跳躍），底層節點密集（精確比對）</li>
+    <li>查詢時從頂層快速定位大致區域，逐層向下精煉，複雜度 O(log n)</li>
+    <li>相比暴力搜尋的 O(n)，在大資料集時優勢明顯；34條的小資料集兩者差異不大</li>
+  </ul>
+
+  <h3>為何選 HNSW 而非 FlatIP（暴力搜尋）？</h3>
+  <p>34 條法條用 FlatIP 也很快，但選 HNSW 基於兩個理由：① 展示業界主流 ANN 演算法的實際配置 ② 未來增加文件量時不需要重建索引類型，FlatIP 在萬筆以上時速度顯著退化。</p>
+</div>
+
+<div class="section" id="metric">
+  <div class="sec-label">向量資料庫 · 02</div>
+  <h2>距離度量：Inner Product vs L2</h2>
+
+  <h3>為何使用 Inner Product 而非 L2？</h3>
+  <p>向量經過 L2 正規化（所有向量的模長 = 1）後，Inner Product（IP）等於 Cosine Similarity：</p>
+  <div class="formula">IP(a, b) = |a||b|cos(θ) = cos(θ)  &emsp;（因為 |a| = |b| = 1）</div>
+  <p>值域為 [-1, 1]，L2 正規化後實際上是 [0, 1]（法條向量語意相似度不會出現負值），可以設定直覺化的 Cosine Threshold（0.40 = 不相關 → 拒答）。L2 距離沒有這樣的直覺意義。</p>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>相似度範圍</th><th>語意意義</th><th>系統行為</th></tr>
+    <tr><td>&gt; 0.70</td><td>高度相關</td><td>直接進入 LLM 生成高品質答案</td></tr>
+    <tr><td>0.40 – 0.70</td><td>相關，有對應法條</td><td>進入 LLM，答案基於法條原文</td></tr>
+    <tr><td>&lt; 0.40</td><td>基本不相關</td><td>直接拒答，不進入 LLM</td></tr>
+  </table></div>
+</div>
+
+<div class="section" id="bm25">
+  <div class="sec-label">向量資料庫 · 03</div>
+  <h2>BM25 混合設計</h2>
+
+  <p>單純 Dense 向量搜尋的缺陷：口語問題的向量與法律術語的向量在語意空間中可能相距較遠。BM25 稀疏檢索補足了精確關鍵字匹配的能力。</p>
+
+  <h3>實作細節</h3>
+  <ul>
+    <li><strong>斷詞工具：</strong>jieba（中文分詞），含自定義法律術語詞典（「性騷擾」、「申訴」、「裁處」、「調解」、「罰鍰」等 20+ 詞）</li>
+    <li><strong>索引對象：</strong><code>embed_text</code>（標籤 + 原文），讓 BM25 直接命中 <code>[刑事責任]</code> 標籤文字</li>
+    <li><strong>BM25 版本：</strong>BM25Okapi（rank-bm25 套件），標準 BM25 公式</li>
+  </ul>
+
+  <h3>BM25 vs Dense 的互補性</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>查詢類型</th><th>BM25 表現</th><th>Dense 表現</th></tr>
+    <tr><td>「申訴期限」</td><td>直接命中「申訴」標籤</td><td>語意向量也接近第14條</td></tr>
+    <tr><td>「刑事責任」</td><td>命中 [刑事責任] 標籤 ← <span class="text-accent">關鍵</span></td><td>與第25條原文語意距離偏遠</td></tr>
+    <tr><td>「多久可以提告」</td><td>「提告」斷詞可能找不到對應詞</td><td>語意向量找到「申訴期限」← <span class="text-accent">關鍵</span></td></tr>
+    <tr><td>「権勢性騷擾調解」</td><td>兩個關鍵字都能命中</td><td>複合概念的向量也能找到</td></tr>
+  </table></div>
+</div>
+
+<div class="section" id="rrf">
+  <div class="sec-label">向量資料庫 · 04</div>
+  <h2>三層 RRF（Reciprocal Rank Fusion）設計</h2>
+
+  <div class="formula">score(d) = Σ  1 / (rank(d) + k)  &emsp; k = 60</div>
+
+  <h3>為何不直接比較原始分數？</h3>
+  <p>BM25 分數可以是任意正數（詞頻越高越大），Cosine 分數在 [0,1] 之間，兩種尺度無法直接比較。RRF 只看「排名第幾名」不看原始分數，轉換後可以直接相加。k=60 是學術界標準值（Cormack et al. 2009），用來防止排名第1的文件得分過高主導結果。</p>
+
+  <h3>本系統的三個 RRF 層次</h3>
+  <div class="ver-timeline">
+    <div class="ver-item">
+      <div class="ver-badge">層次 1</div>
+      <div class="ver-title">單次查詢內：BM25 + Dense 合併</div>
+      <div class="ver-body">每個子查詢各自跑 BM25 和 Dense 兩路，各取 Top-6 候選（12個），用 RRF 合併排名得到該子查詢的最終 Top-6。</div>
+    </div>
+    <div class="ver-item latest">
+      <div class="ver-badge">層次 3</div>
+      <div class="ver-title">跨子查詢：Cross-Query RRF（最關鍵）</div>
+      <div class="ver-body">所有子查詢的結果統一累加：<code>chunk_rrf[id] += 1.0 / (rank + 60)</code>。在多個子查詢中都排名靠前的 chunk 因多次累加而得到更高最終分數，相當於「多條子查詢的共識排名」。最終取 Top-8 unique chunks 送入 LLM。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  回答策略                              -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="section" id="decompose">
+  <div class="sec-label">回答策略 · 01</div>
+  <h2>Adaptive Query Decomposition（問題自適應拆解）</h2>
+
+  <h3>問題背景</h3>
+  <p>複合型法律問題包含多個獨立的法律面向，單一查詢向量是所有面向的平均，在語意空間中「漂移」到顯眼的面向附近，忽略其他面向的關鍵條文。</p>
+
+  <div class="callout callout-warn">
+    <strong>v1.0 失敗案例（Q2）：</strong>問「刑事責任、行政責任、民事責任、降職報復」四個面向，單一向量漂移到申訴程序附近，九條關鍵法條只命中 2 條（15/100）。
+  </div>
+
+  <h3>設計：依問題複雜度自動生成 1-6 個子查詢</h3>
+  <p>LLM 分析問題後決定拆解粒度。若問題涉及「法律責任」，刑事、行政、民事三類<strong>強制各自獨立</strong>為子查詢：</p>
+
+  <pre><code><span class="comment">── 輸入問題 ──</span>
+公司 25 名員工，負責人對員工実施権勢性騷擾後將其降職，三方面責任？
+
+<span class="comment">── 拆解輸出 ──</span>
+QUERIES:
+1. 行為人因権勢性騷擾遭受何種<span class="kw">刑事</span>罰則（有期徒刑或罰金）
+2. 行為人因権勢性騷擾遭受何種<span class="kw">行政</span>罰則（罰鍰金額及裁罰機關）
+3. 被害人得請求之<span class="kw">民事</span>損害賠償及懲罰性賠償金
+4. 公司（機構）因未防止事件發生面臨之<span class="kw">行政</span>罰鍰
+5. 公司因<span class="kw">降職</span>行為可能面臨之行政法律後果
+6. 被害人因差別待遇得請求之民事損害賠償</code></pre>
+
+  <p>簡單問題（「申訴期限是多久」）自動縮減為 1-2 個子查詢，不強制使用全部名額。</p>
+</div>
+
+<div class="section" id="facts">
+  <div class="sec-label">回答策略 · 02</div>
+  <h2>Fact Extraction（事實條件提取）</h2>
+
+  <h3>問題背景</h3>
+  <p>法律問題有時需要「事實條件 → 款項比對」的推理。例如第14條第3項依行為人是否有所屬機關、是否為機構首長分為三款，14b 模型在 zero-shot 下難以穩定選擇正確款項。</p>
+
+  <h3>設計：同一次 LLM 呼叫輸出兩段結構</h3>
+
+  <pre><code><span class="comment">── Decomposition 提示詞要求 LLM 輸出以下格式 ──</span>
+
+FACTS:
+- 行為人身份：老師（有所屬學校，非機構最高負責人）
+- 騷擾類型：権勢性騷擾
+- 時間點：成年後第 4 年才提出申訴
+
+QUERIES:
+1. 未成年人性騷擾申訴時效
+2. 申訴管道選擇（有所屬學校）
+3. 申訴時間是否已逾越</code></pre>
+
+  <p><code>FACTS</code> 區塊在答案生成時作為 <code>【事實條件】</code> 送入 LLM，幫助模型比對正確款項：</p>
+
+  <pre><code>【事實條件（供條款適用比對）】
+- 行為人身份：老師（有所屬學校，非機構最高負責人）
+- 騷擾類型：権勢性騷擾
+- 時間點：成年後第 4 年才提出申訴
+
+【參考法條】
+[第四章 申訴及調查程序｜第 14 條]
+性騷擾事件被害人除可依相關法律請求協助外...
+
+請逐步比對「事實條件」與各法條的適用情境，選擇正確的款項</code></pre>
+
+  <h3>容錯設計</h3>
+  <ul>
+    <li>FACTS 解析失敗 → <code>facts = []</code>，不影響 QUERIES 解析</li>
+    <li>QUERIES 解析失敗 → fallback 回 <code>[original_question]</code></li>
+  </ul>
+</div>
+
+<div class="section" id="pipeline">
+  <div class="sec-label">回答策略 · 03</div>
+  <h2>完整 Pipeline（v3.1）</h2>
+
+  <div class="ver-timeline">
+    <div class="ver-item">
+      <div class="ver-badge">Step 1 · ~15s</div>
+      <div class="ver-title">Fact Extraction + Query Decomposition</div>
+      <div class="ver-body">一次 LLM 呼叫輸出 FACTS + QUERIES 兩段。timeout=60s，num_predict=300（限制輸出長度避免過長）。</div>
+    </div>
+    <div class="ver-item">
+      <div class="ver-badge">Step 2 · ~1s</div>
+      <div class="ver-title">Per-Sub-Query Hybrid Retrieval（asyncio 並行）</div>
+      <div class="ver-body">所有子查詢以 asyncio.gather + run_in_executor 並行執行。SentenceTransformer 在 PyTorch 計算時釋放 GIL，支援多線程並行。每個子查詢取 BM25 Top-6 + Dense Top-6，RRF 合併。</div>
+    </div>
+    <div class="ver-item">
+      <div class="ver-badge">Step 3 · &lt;0.1s</div>
+      <div class="ver-title">Cross-Query RRF 合併去重</div>
+      <div class="ver-body"><code>chunk_rrf[id] += 1.0 / (rank + 60)</code> 跨查詢累加，取 Top-8 unique chunks。</div>
+    </div>
+    <div class="ver-item">
+      <div class="ver-badge">Step 4 · &lt;0.1s</div>
+      <div class="ver-title">Cosine Threshold Guard</div>
+      <div class="ver-body">best_score &lt; 0.40 → 直接回傳拒答訊息，不進入 LLM，節省 20-70 秒算力。</div>
+    </div>
+    <div class="ver-item latest">
+      <div class="ver-badge">Step 5 · 20-70s</div>
+      <div class="ver-title">LLM 答案生成（含 Self-Check）</div>
+      <div class="ver-body">事實條件 + Top-8 法條原文送入 qwen2.5:14b。temperature=0.1（穩定輸出）。timeout=180s（8條法條 context 需要更長時間）。</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>問題類型</th><th>子查詢數</th><th>總耗時</th><th>分解</th></tr>
+    <tr><td>簡單問題（單一面向）</td><td>1</td><td>~36 秒</td><td>Decompose 15s + 檢索 1s + Answer 20s</td></tr>
+    <tr><td>複雜問題（多面向）</td><td>6</td><td>~87 秒</td><td>Decompose 18s + 檢索 1s + Answer 68s</td></tr>
+  </table></div>
+  <p><strong>瓶頸：</strong>兩次 LLM 呼叫佔 95% 以上時間，Retrieval 並行化後只佔約 1%。本地 14b 模型的硬體上限，需換模型或硬體才能突破。</p>
+</div>
+
+<div class="section" id="hallucination">
+  <div class="sec-label">回答策略 · 04</div>
+  <h2>防幻覺三道防線</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>🛡 第一道：Cosine Threshold</h4>
+      <pre><code><span class="kw">if</span> best_score &lt; <span class="num">0.40</span>:
+    <span class="kw">return</span> <span class="str">"無法回覆該問題"</span>
+    <span class="comment"># 不進 LLM，節省算力</span></code></pre>
+      <p>攔截完全無關的離域問題（「台積電股價是多少」cosine=0.36，直接拒答）。</p>
+    </div>
+    <div class="card">
+      <h4>🛡 第二道：System Prompt 規則</h4>
+      <pre><code><span class="comment"># 核心規則（System Prompt）</span>
+<span class="str">"只能根據參考法條回答"</span>
+<span class="str">"不得引用參考法條以外的"</span>
+<span class="str">"任何法律，包括刑法、民法"</span></code></pre>
+      <p>攔截 LLM 從訓練記憶中引用外部法律。曾發現當第25條未命中時，LLM 引用刑法第305條，此規則修正後消失。</p>
+    </div>
+    <div class="card">
+      <h4>🛡 第三道：Self-Check Prompting</h4>
+      <pre><code><span class="comment"># User Prompt 末尾要求</span>
+<span class="str">"若有任何面向因參考法條"</span>
+<span class="str">"資料不足而無法回答，"</span>
+<span class="str">"請加上：⚠️ 以下面向因"</span>
+<span class="str">"參考法條資料不足，無法回答"</span></code></pre>
+      <p>讓 LLM 主動承認知識邊界，不填補空白。在壓力測試中驗證有效，LLM 會主動標出無法回答的法律面向。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  壓力測試                              -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="section" id="test-design">
+  <div class="sec-label">壓力測試 · 01</div>
+  <h2>測試設計邏輯</h2>
+
+  <h3>為什麼選這三題？</h3>
+  <p>三道測試題均為<strong>跨多條文的複合型問題</strong>，設計目的是讓單一向量無法同時覆蓋所有面向，強制暴露系統的檢索上限。</p>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>題目</th><th>問題摘要</th><th>涉及法條</th><th>核心難點</th></tr>
+    <tr><td><strong>Q1</strong></td><td>未成年 + 権勢 + 成年後第4年申訴，時效？管道？</td><td>第2、14、15條</td><td>需比較兩條期限取較長者（「從其規定」邏輯）+ 款項條件推理</td></tr>
+    <tr><td><strong>Q2</strong></td><td>25員工 + 負責人権勢騷擾 + 降職報復，三層責任？</td><td>第2、7、9、12、13、25、27、28、29條（9條）</td><td>刑事/行政/民事/機構/降職五個面向，單一向量只能找到1-2條</td></tr>
+    <tr><td><strong>Q3</strong></td><td>調查後申請調解，流程時限？效力？核定後救濟？</td><td>第16、18、19、20、21、22、23條（7條）</td><td>需依序串起七個條文的程序鏈，每條時限數字不同</td></tr>
+  </table></div>
+
+  <h3>評分方法：Claude 文意理解作為標準答案</h3>
+  <p>本測試沒有預設固定答案，而是使用 <strong>Claude（claude-4-6-sonnet）的文意理解能力作為評分基準</strong>。流程如下：</p>
+  <ol>
+    <li>將完整問題與性騷擾防治法全文一起送入 Claude，請 Claude 生成「理想標準答案」，列出應命中的關鍵法條與推理要點</li>
+    <li>將本系統（qwen2.5:14b）的實際回答也送給 Claude，請 Claude 對照標準答案評分（0-100）</li>
+    <li>評分維度包含：法條命中率、款項正確性、時限數字準確性、推理邏輯完整性</li>
+  </ol>
+  <div class="callout callout-blue">
+    <strong>設計理念：</strong>法律問題的正確答案往往需要跨多條文的推理，難以用固定字串比對評分。讓具備完整法律文本上下文的強力模型（Claude）作為評審，能更準確評估回答的法律推理品質，而非只看關鍵字是否出現。
+  </div>
+</div>
+
+<div class="section" id="evolution">
+  <div class="sec-label">壓力測試 · 02</div>
+  <h2>版本演進歷程</h2>
+  <p>從 v1.0 到 v3.1 共四個版本，每次迭代都是「壓力測試發現問題 → 針對性設計新機制」的循環。</p>
+
+  <div class="ver-timeline">
+    <div class="ver-item">
+      <div class="ver-badge">v1.0 — 基礎版</div>
+      <div class="ver-title">Single-Query Hybrid Retrieval（TOP_K=3）</div>
+      <div class="ver-body">
+        <strong>設計：</strong>接收問題 → Query rewriting → embed 成一個向量 → BM25 + Dense 各取 Top-3，RRF 合併 → 送 LLM 生成答案。<br><br>
+        <strong>壓力測試發現問題（Q2 得 15 分）：</strong>問「刑事責任、行政責任、民事責任、降職報復」四個面向，系統把整個問題 embed 成一個向量。這個向量是四個面向語意的平均值，在向量空間中飄到申訴程序附近（因為問題文字含有「責任」「員工」這類偏向行政程序的詞）。九條關鍵法條只找到 2 條。
+      </div>
+    </div>
+
+    <div class="ver-item">
+      <div class="ver-badge">v2.0 — 拆解版</div>
+      <div class="ver-title">Adaptive Decomposition + Cross-Query RRF（TOP_K=6）</div>
+      <div class="ver-body">
+        <strong>加入邏輯：</strong>讓 LLM 先分析問題，拆成 1-4 個子查詢，每個子查詢分別搜尋，結果用 Cross-Query RRF 合併取 Top-6。<br><br>
+        <strong>執行效果：</strong>Q2 從 15 → 55 分（+40），Q3 從 55 → 82 分（+27）。問題拆成「刑事責任」「行政責任」「民事責任」「降職」四路分別搜尋，命中率大幅提升。<br><br>
+        <strong>仍存在的缺點：</strong>「刑事責任」子查詢的向量，和第25條原文（「意圖性騷擾，以強吻、撫摸⋯⋯」）的向量之間語意距離偏遠——法條原文根本沒有「刑事責任」這個詞，只有具體行為描述。Dense 搜尋找不到，BM25 也沒有關鍵字命中。Q2 刑事面向持續空缺。
+      </div>
+    </div>
+
+    <div class="ver-item">
+      <div class="ver-badge">v3.0 — 標籤版</div>
+      <div class="ver-title">LLM 語意標籤 + Self-Check Prompting</div>
+      <div class="ver-body">
+        <strong>加入邏輯：</strong>Ingest 建庫時讓 LLM 為每條法條生成「語意標籤」（[刑事責任][有期徒刑][告訴乃論]），拼接在法條原文前方建索引。BM25 直接命中標籤文字，Dense 的向量也因為包含標籤詞而被拉近。<br><br>
+        <strong>執行效果：</strong>第25條首次被「刑事責任」子查詢命中，Q2 從 55 → 70 分（+15）。Q3 的第19條（10日/20日程序）也因標籤 [時效規定] 首次命中，從 82 → 88 分（+6）。<br><br>
+        <strong>發現新問題（排擠問題）：</strong>TOP_K=6 名額有限，多面向問題（Q2 有5個面向）中，某些法條被排擠出 Top-6。「降職報復」對應的第29條始終無法進入名額。另外，款項推理不穩定：LLM 知道應該找「有所屬機關 → 第1款」，但沒有明確的事實條件作為推理起點。
+      </div>
+    </div>
+
+    <div class="ver-item latest">
+      <div class="ver-badge">v3.1 — 最終版</div>
+      <div class="ver-title">Fact Extraction + 6子查詢 + TOP_K=8 + TIMEOUT 擴展</div>
+      <div class="ver-body">
+        <strong>更新邏輯：</strong>
+        <ul style="margin:8px 0 0 0">
+          <li>同一次 LLM 呼叫同時輸出 <code>FACTS</code>（提取的事實條件）和 <code>QUERIES</code>（子查詢），事實條件在答案生成時作為推理錨點</li>
+          <li>子查詢數量上限從 4 提升到 6，增加子查詢數量以含蓋更多面向</li>
+          <li>TOP_K 從 6 提升到 8，解決排擠問題，讓更多面向的法條同時進入 LLM context</li>
+          <li>TIMEOUT 從 120s 擴展到 180s，應對 8 條法條 context 帶來的更長生成時間</li>
+        </ul>
+        <br>
+        <strong>執行效果：</strong>Q2 的「降職報復」（第29條）首次命中（82分），Q3 的「調解不成立移送」（第22條第2項）首次命中（92分），平均分從 75 → 83 分（+8）。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="section" id="summary">
+  <div class="sec-label">壓力測試 · 03</div>
+  <h2>四版對比總表</h2>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>版本</th><th>核心架構變更</th><th>Q1</th><th>Q2</th><th>Q3</th><th>平均</th></tr>
+    <tr>
+      <td><strong>v1.0</strong></td>
+      <td>Single-Query + HybridRetrieval + TOP_K=3</td>
+      <td class="score" style="color:var(--danger)">40</td><td class="score" style="color:var(--danger)">15</td><td class="score" style="color:var(--warn)">55</td><td class="score" style="color:var(--danger)">37</td>
+    </tr>
+    <tr>
+      <td><strong>v2.0</strong></td>
+      <td>Adaptive Decomposition（4子查詢）+ Cross-Query RRF + TOP_K=6</td>
+      <td class="score" style="color:var(--warn)">62</td><td class="score" style="color:var(--warn)">55</td><td class="score" style="color:var(--accent)">82</td><td class="score" style="color:var(--warn)">66</td>
+    </tr>
+    <tr>
+      <td><strong>v3.0</strong></td>
+      <td>LLM語意標籤 + 刑/行/民Prompt + Self-Check</td>
+      <td class="score" style="color:var(--warn)">68</td><td class="score" style="color:var(--warn)">70</td><td class="score" style="color:var(--accent)">88</td><td class="score" style="color:var(--warn)">75</td>
+    </tr>
+    <tr style="background:rgba(99,102,241,.06)">
+      <td><strong>v3.1 ✦</strong></td>
+      <td>Fact Extraction + 6子查詢 + TOP_K=8 + TIMEOUT=180s</td>
+      <td class="score" style="color:var(--accent)">74</td><td class="score" style="color:var(--accent)">82</td><td class="score" style="color:var(--accent)">92</td><td class="score grad-text" style="font-size:18px">83</td>
+    </tr>
+  </table></div>
+</div>
+
+<!-- Q1 -->
+<div class="section" id="q1">
+  <div class="sec-label">壓力測試 · Q1</div>
+  <h2>Q1：時效 + 申訴管道</h2>
+
+  <div class="card" style="margin-bottom:20px">
+    <h4 style="margin-top:0">完整問題</h4>
+    <p style="color:var(--text);font-style:italic">「小明在未成年時期（15歲）遭到老師（在學校任職）的権勢性騷擾。小明現在已成年，事件發生在成年後第四年才提出申訴。請問：① 申訴是否超過時效？② 應向哪個機關申訴？」</p>
+  </div>
+
+  <h3>法條命中分析</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>面向</th><th>關鍵法條</th><th>v1.0</th><th>v2.0</th><th>v3.0</th><th>v3.1</th></tr>
+    <tr><td>未成年時效（成年後3年）</td><td>第14條第2項</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>権勢性騷擾時效（知悉後3年/7年）</td><td>第14條第1項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>兩條比較邏輯（從其規定取較長者）</td><td>第14條第2項後段</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>申訴管道（向有所屬機關申訴）</td><td>第14條第3項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>款項精確（第1款）vs 錯誤引用（第3款）</td><td>第14條第3項第1款</td><td class="miss">❌</td><td class="miss">△ 混淆</td><td class="miss">△ 混淆</td><td class="miss">△ 混淆</td></tr>
+    <tr><td><strong>命中率</strong></td><td></td><td class="score" style="color:var(--danger)">1/5</td><td class="score" style="color:var(--warn)">3/5</td><td class="score" style="color:var(--warn)">4/5</td><td class="score" style="color:var(--accent)">4/5</td></tr>
+  </table></div>
+
+  <h3>各版本突破分析</h3>
+  <div class="qa-block">
+    <div class="qa-meta">
+      <span class="qa-tag">核心法條：第14條</span>
+      <span class="qa-tag">難點：比較邏輯 + 款項選擇</span>
+    </div>
+    <div class="qa-versions">
+      <div class="qa-ver">
+        <div class="qa-ver-badge">v1.0</div>
+        <div class="qa-ver-body">命中第14條，結論正確（申訴逾越時效），但未展現「從其規定」的比較邏輯。申訴管道引用第3款（無所屬機關），應為第1款（有所屬學校）。</div>
+        <div class="qa-ver-score" style="color:var(--danger)">40</div>
+      </div>
+      <div class="qa-ver">
+        <div class="qa-ver-badge">v2.0</div>
+        <div class="qa-ver-body">3個子查詢（時效/是否超時/申訴管道），正確識別成年後3年規定，並正確說明有所屬機關應向機關申訴（第14條第3項），但款項仍有細節混淆。</div>
+        <div class="qa-ver-score" style="color:var(--warn)">62</div>
+      </div>
+      <div class="qa-ver">
+        <div class="qa-ver-badge">v3.0</div>
+        <div class="qa-ver-body">「從其規定」比較邏輯出現在答案中（第14條第2項），正確引用両條期限並比較。申訴管道款項仍有混淆。</div>
+        <div class="qa-ver-score" style="color:var(--warn)">68</div>
+      </div>
+      <div class="qa-ver">
+        <div class="qa-ver-badge v31">v3.1</div>
+        <div class="qa-ver-body">事實條件「行為人：老師（有所屬學校）」輔助 LLM 鎖定権勢性騷擾框架，比較邏輯更完整。申訴管道款項仍為本系統在 14b zero-shot 下的穩定上限。</div>
+        <div class="qa-ver-score" style="color:var(--accent)">74</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>v3.1 實際回答預覽</h3>
+  <div class="cli-block">
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 回答（qwen2.5:14b）</div>
+    <div class="cli-body">
+      <span class="cli-highlight">根據事實條件（行為人：老師，有所屬學校；騷擾類型：権勢性騷擾；時間：成年後第4年提出申訴），分析如下：</span><br><br>
+      <span class="cli-highlight">【① 申訴是否超過時效】</span><br><br>
+      <span class="cli-out">依第14條第2項，未成年被害人得於成年後3年內申訴。</span><br>
+      <span class="cli-out">本案被害人成年後第4年提出申訴，已逾3年期限。</span><br><br>
+      <span class="cli-out">依第14條第1項，権勢性騷擾之申訴期限為知悉後3年內、自事件起不逾7年。</span><br>
+      <span class="cli-out">本案事件發生於未成年時期，成年後第4年提出，亦逾此限。</span><br><br>
+      <span class="cli-out">依第14條第2項後段「從其規定，適用較長期限」，兩條均已逾越，</span><br>
+      <span class="cli-warn">申訴已超過法定時效，無論依哪條規定計算均不得申訴。</span><br><br>
+      <span class="cli-highlight">【② 應向哪個機關申訴】</span><br><br>
+      <span class="cli-out">依第14條第3項，行為人（老師）有所屬機關（學校），</span><br>
+      <span class="cli-out">被害人應向行為人所屬機關（即學校）提出申訴。</span><br><br>
+      <span class="cli-warn">⚠️ 款項精確判斷（第1款 vs 第2款）涉及行為人是否為機構最高負責人，</span><br>
+      <span class="cli-warn">此多步條件推理為本系統目前的穩定上限。</span>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>已知上限：</strong>申訴管道款項判斷需要「老師 ≠ 機構首長 → 第1款而非第2款」的多步條件推理，超出 14b zero-shot 的穩定上限。Chain-of-Thought 款項判斷樹是下一步優化方向。
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="section" id="q2">
+  <div class="sec-label">壓力測試 · Q2</div>
+  <h2>Q2：三層責任複合題</h2>
+
+  <div class="card" style="margin-bottom:20px">
+    <h4 style="margin-top:0">完整問題</h4>
+    <p style="color:var(--text);font-style:italic">「某公司有25名員工，公司負責人對員工實施権勢性騷擾，事後將該員工降職。請問：行為人的刑事責任為何？機構的行政責任為何？被害人可主張哪些民事損害賠償？降職行為有何法律效果？」</p>
+  </div>
+
+  <h3>法條命中分析</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>面向</th><th>關鍵法條</th><th>v1.0</th><th>v2.0</th><th>v3.0</th><th>v3.1</th></tr>
+    <tr><td>刑事責任</td><td>第25條（2年以下，権勢加重1.5倍）</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>行政罰鍰（行為人）</td><td>第27條（権勢：6~60萬）</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>降職報復行政罰鍰</td><td>第29條（1~10萬，限期改正）</td><td class="miss">❌</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓ 首次</td></tr>
+    <tr><td>差別待遇禁止/損害賠償</td><td>第9條</td><td class="miss">❌</td><td class="hit">✓</td><td class="miss">❌</td><td class="hit">✓</td></tr>
+    <tr><td>民事損害賠償+懲罰性</td><td>第12條（1~3倍）</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>機構協助義務</td><td>第13條</td><td class="hit">✓</td><td class="hit">✓</td><td class="miss">❌</td><td class="miss">❌</td></tr>
+    <tr><td>機構員工數義務（25人）</td><td>第7條</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="miss">❌</td></tr>
+    <tr><td>機構未糾正罰鍰</td><td>第28條</td><td class="miss">❌</td><td class="miss">❌</td><td class="miss">❌</td><td class="miss">❌ 始終未命中</td></tr>
+    <tr><td><strong>命中率</strong></td><td></td><td class="score">2/9</td><td class="score">5/9</td><td class="score">5/9</td><td class="score">6/9</td></tr>
+  </table></div>
+
+  <h3>各版本突破分析</h3>
+  <div class="qa-block">
+    <div class="qa-versions">
+      <div class="qa-ver">
+        <div class="qa-ver-badge">v1.0</div>
+        <div class="qa-ver-body">問題 embed 成單一向量，漂移到申訴程序附近，完全未命中罰則章（第25-29條）與差別待遇（第9條）。9條中只找到2條。</div>
+        <div class="qa-ver-score" style="color:var(--danger)">15</div>
+      </div>
+      <div class="qa-ver">
+        <div class="qa-ver-badge">v2.0</div>
+        <div class="qa-ver-body">4個子查詢（刑事/行政/民事/降職），分別搜尋後命中第27條（行政罰鍰）、第9條（差別待遇），命中率 2→5/9。但子查詢「刑事責任」的向量離第25條原文仍有距離。</div>
+        <div class="qa-ver-score" style="color:var(--warn)">55</div>
+      </div>
+      <div class="qa-ver">
+        <div class="qa-ver-badge">v3.0</div>
+        <div class="qa-ver-body">語意標籤 [刑事責任][有期徒刑] 融入第25條的 embed_text，子查詢「刑事罰則（有期徒刑或罰金）」終於命中第25條。首次看到刑事責任回答。Self-Check 正確標出降職面向資料不足。</div>
+        <div class="qa-ver-score" style="color:var(--warn)">70</div>
+      </div>
+      <div class="qa-ver">
+        <div class="qa-ver-badge v31">v3.1</div>
+        <div class="qa-ver-body">6個子查詢（刑事×行為人、行政×行為人、民事×行為人、刑事×公司、行政×公司、降職×法律效果），「降職」獨立子查詢首次命中第29條（差別待遇行政罰鍰 1~10萬）。答案格式清晰分三層逐一引用。</div>
+        <div class="qa-ver-score" style="color:var(--accent)">82</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>v3.1 實際回答預覽</h3>
+  <div class="cli-block">
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 回答（qwen2.5:14b）</div>
+    <div class="cli-body">
+      <span class="cli-highlight">根據事實條件（公司負責人；権勢性騷擾；25名員工；降職報復）：</span><br><br>
+      <span class="cli-highlight">【一、刑事責任（第25條）】</span><br>
+      <span class="cli-out">依第25條第1項，行為人處2年以下有期徒刑、拘役或科或併科30萬元以下罰金。</span><br>
+      <span class="cli-out">依第25條第2項，因屬権勢性騷擾，加重其刑至二分之一（最高可至3年）。</span><br>
+      <span class="cli-out">本罪為告訴乃論。</span><br><br>
+      <span class="cli-highlight">【二、行政責任】</span><br>
+      <span class="cli-out">行為人行政罰鍰（第27條）：依第27條第2項，権勢性騷擾由主管機關</span><br>
+      <span class="cli-out">處6萬元以上60萬元以下罰鍰。</span><br><br>
+      <span class="cli-out">降職報復行政罰鍰（第29條）：依第29條，機構對被害人實施差別待遇（降職），</span><br>
+      <span class="cli-out">由主管機關處1萬元以上10萬元以下罰鍰，並得令限期改正。</span><br><br>
+      <span class="cli-highlight">【三、民事損害賠償（第12條）】</span><br>
+      <span class="cli-out">依第12條第1項，被害人得請求損害賠償。</span><br>
+      <span class="cli-out">依第12條第2項，得請求1倍以上3倍以下之懲罰性賠償金。</span><br><br>
+      <span class="cli-warn">⚠️ 機構未糾正行為人之行政罰鍰責任（第28條）因參考法條資料不足，</span><br>
+      <span class="cli-warn">無法就此面向完整回答。</span>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>已知上限（第28條）：</strong>機構「未糾正」的被動責任，語意距離始終偏遠。即使標籤包含「行政罰鍰」，在 Top-8 名額有限的情況下仍被第27/29/30條排擠。此為 Top-K 固定上限的固有限制。
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="section" id="q3">
+  <div class="sec-label">壓力測試 · Q3</div>
+  <h2>Q3：調解程序鏈</h2>
+
+  <div class="card" style="margin-bottom:20px">
+    <h4 style="margin-top:0">完整問題</h4>
+    <p style="color:var(--text);font-style:italic">「性騷擾案件調查完畢後申請調解的完整流程是什麼？各階段的時限規定？調解成立後的法律效力？調解核定後不服應如何救濟？」</p>
+  </div>
+
+  <h3>法條命中分析</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>程序</th><th>關鍵法條</th><th>v1.0</th><th>v2.0</th><th>v3.0</th><th>v3.1</th></tr>
+    <tr><td>権勢性騷擾不適用調解</td><td>第18條第1項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>委員聘任：<strong>10日</strong>內</td><td>第19條</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>調解期日：聘後<strong>20日</strong>內</td><td>第19條</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>調解書製作</td><td>第21條</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>不成立→<strong>10日</strong>內移送</td><td>第22條第2項</td><td class="miss">❌</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓ 首次</td></tr>
+    <tr><td>核定效力 = 民事確定判決</td><td>第23條</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>核定後<strong>30日</strong>內救濟</td><td>第23條第3項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+  </table></div>
+
+  <h3>各版本突破分析</h3>
+  <div class="qa-block">
+    <div class="qa-versions">
+      <div class="qa-ver">
+        <div class="qa-ver-badge">v1.0</div>
+        <div class="qa-ver-body">命中第21、22條，部分覆蓋調解書製作。所有「時限」（10日、20日、30日）均未提及，権勢性騷擾排除調解完全未提。</div>
+        <div class="qa-ver-score" style="color:var(--warn)">55</div>
+      </div>
+      <div class="qa-ver">
+        <div class="qa-ver-badge">v2.0</div>
+        <div class="qa-ver-body">4個子查詢拆解，命中第18、21、22、23條。補齊法律效力（民事確定判決）和30日救濟期限。第19條（10日/20日）仍未命中。</div>
+        <div class="qa-ver-score" style="color:var(--warn)">82</div>
+      </div>
+      <div class="qa-ver">
+        <div class="qa-ver-badge">v3.0</div>
+        <div class="qa-ver-body">語意標籤 [時效規定][性騷擾調解] 拉近了第19條的距離，首次命中。委員10日聘任、期日20日數字出現在答案中，顯著提升回答品質。</div>
+        <div class="qa-ver-score" style="color:var(--accent)">88</div>
+      </div>
+      <div class="qa-ver">
+        <div class="qa-ver-badge v31">v3.1</div>
+        <div class="qa-ver-body">TOP_K=8 補回第22條（不成立→10日內移送司法機關）和第20條（委員義務）。調解程序鏈幾乎完整涵蓋第18-24條。Self-Check 主動標出刑事調解救濟面向資料不足。</div>
+        <div class="qa-ver-score" style="color:var(--accent)">92</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>v3.1 實際回答預覽</h3>
+  <div class="cli-block">
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 回答（qwen2.5:14b）</div>
+    <div class="cli-body">
+      <span class="cli-highlight">依第18條至第23條，調解程序說明如下：</span><br><br>
+      <span class="cli-highlight">【前提：権勢性騷擾不得申請調解（第18條第1項）】</span><br>
+      <span class="cli-out">依第18條第1項，権勢性騷擾事件之被害人不得申請調解。</span><br>
+      <span class="cli-out">若本案屬権勢性騷擾，應直接進入司法程序，以下程序僅適用一般性騷擾案件。</span><br><br>
+      <span class="cli-highlight">【調解申請與期日（第18、19條）】</span><br>
+      <span class="cli-out">被害人得向直轄市、縣（市）主管機關申請調解。</span><br>
+      <span class="cli-out">主管機關應於10日內聘任調解委員（第19條）。</span><br>
+      <span class="cli-out">調解委員應於聘任後20日內進行調解（第19條）。</span><br><br>
+      <span class="cli-highlight">【調解書製作（第21條）】</span><br>
+      <span class="cli-out">調解成立時，應製作調解書，記載調解內容，由當事人及調解委員簽名。</span><br><br>
+      <span class="cli-highlight">【調解不成立處理（第22條第2項）】</span><br>
+      <span class="cli-out">調解不成立時，主管機關應於10日內，依當事人申請移送司法機關處理。</span><br><br>
+      <span class="cli-highlight">【調解核定效力（第23條第1-2項）】</span><br>
+      <span class="cli-out">法院核定之調解，與民事確定判決有同一效力。</span><br><br>
+      <span class="cli-highlight">【核定後救濟（第23條第3項）】</span><br>
+      <span class="cli-out">調解核定後，當事人得於30日內向法院提起撤銷調解之訴。</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  使用教學                              -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="section" id="setup">
+  <div class="sec-label">使用教學 · 01</div>
+  <h2>環境建置</h2>
+
+  <h3>安裝 Python 套件</h3>
+  <pre><code>cd ~/Desktop/法律文件RAG
+pip3 install -r requirements.txt</code></pre>
+
+  <h3>下載 LLM 模型</h3>
+  <pre><code><span class="comment"># 下載主力模型（約 9GB，需要時間）</span>
+ollama pull qwen2.5:14b</code></pre>
+
+  <h3>建立向量資料庫（只需執行一次）</h3>
+  <pre><code>python3 ingest.py</code></pre>
+
+  <div class="cli-block">
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>Terminal</div>
+    <div class="cli-body">
+      <span class="cli-prompt">$</span> <span class="cli-cmd">python3 ingest.py</span><br>
+      <span class="cli-out">[1/7] 載入 PDF：data/性騷擾防治法.pdf</span><br>
+      <span class="cli-out">[2/7] 清洗文字（移除頁眉、正規化空白）</span><br>
+      <span class="cli-out">[3/7] 切分法條：34 個 chunks</span><br>
+      <span class="cli-out">[4/7] 生成語意標籤（LLM，約 5-10 分鐘）</span><br>
+      <span class="cli-highlight">    第 1 條 → [性騷擾定義][立法目的][被害人保護]...</span><br>
+      <span class="cli-highlight">    第 25 條 → [刑事責任][有期徒刑][告訴乃論]...</span><br>
+      <span class="cli-out">[5/7] 向量化 embed_text（bge-m3）</span><br>
+      <span class="cli-out">[6/7] 建立 FAISS HNSW 索引（M=32）</span><br>
+      <span class="cli-out">[7/7] 建立 BM25 索引</span><br>
+      <span class="cli-highlight">✓ 完成。vector_store/ 已建立（index.faiss + metadata.json + bm25.pkl）</span>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="cli">
+  <div class="sec-label">使用教學 · 02</div>
+  <h2>CLI 使用方式</h2>
+
+  <h3>四種執行模式</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>模式</th><th>指令</th><th>說明</th></tr>
+    <tr><td>單次問答</td><td><code>python3 query.py "問題"</code></td><td>輸出格式化答案 + 來源法條</td></tr>
+    <tr><td>互動模式</td><td><code>python3 query.py -i</code></td><td>連續問答，輸入 quit 離開</td></tr>
+    <tr><td>Verbose 模式</td><td><code>python3 query.py "問題" --verbose</code></td><td>顯示完整 Pipeline（子查詢、RRF 分數）</td></tr>
+    <tr><td>JSON 輸出</td><td><code>python3 query.py "問題" --json</code></td><td>輸出 JSON，含 facts + sub_queries 欄位</td></tr>
+  </table></div>
+
+  <h3>Verbose 模式輸出示例</h3>
+  <div class="cli-block">
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>Terminal — verbose 模式</div>
+    <div class="cli-body">
+      <span class="cli-prompt">$</span> <span class="cli-cmd">python3 query.py "公司負責人性騷擾員工後降職，三方面責任為何" --verbose</span><br><br>
+      <span class="cli-out">──────────────────────────────────────────────────</span><br>
+      <span class="cli-highlight">[1] 原始問題  ：公司負責人性騷擾員工後降職，三方面責任為何</span><br>
+      <span class="cli-out">    事實條件  ：</span><br>
+      <span class="cli-out">      · 行為人：公司負責人（機構首長，権勢性騷擾）</span><br>
+      <span class="cli-out">      · 附帶行為：降職（差別待遇）</span><br>
+      <span class="cli-out">    子查詢數量：6</span><br>
+      <span class="cli-out">    子查詢 1  ：行為人因権勢性騷擾遭受何種刑事罰則</span><br>
+      <span class="cli-out">    子查詢 2  ：行為人因権勢性騷擾遭受何種行政罰則</span><br>
+      <span class="cli-out">    子查詢 3  ：被害人得請求之損害賠償及懲罰性賠償金</span><br>
+      <span class="cli-out">    子查詢 4  ：公司因未防止事件發生面臨之行政罰鍰</span><br>
+      <span class="cli-out">    子查詢 5  ：降職行為可能面臨之行政法律後果</span><br>
+      <span class="cli-out">    子查詢 6  ：差別待遇得請求之民事損害賠償</span><br><br>
+      <span class="cli-out">[2] 子查詢檢索：「行為人因権勢性騷擾遭受何種刑事罰則」→ 6 chunks, cosine=0.7821</span><br>
+      <span class="cli-out">    子查詢檢索：「行為人因権勢性騷擾遭受何種行政罰則」→ 6 chunks, cosine=0.7614</span><br>
+      <span class="cli-out">    子查詢檢索：「降職行為可能面臨之行政法律後果」→ 6 chunks, cosine=0.7203</span><br>
+      <span class="cli-out">    …（並行執行，共 6 條子查詢）</span><br><br>
+      <span class="cli-out">[3] Cross-Query RRF：31 unique chunks → Top 8</span><br>
+      <span class="cli-out">    → [第六章 罰則｜第 25 條] RRF=0.03201</span><br>
+      <span class="cli-out">    → [第六章 罰則｜第 27 條] RRF=0.02847</span><br>
+      <span class="cli-out">    → [第六章 罰則｜第 29 條] RRF=0.02541</span><br>
+      <span class="cli-out">    → [第三章 被害人保護｜第 12 條] RRF=0.02198</span><br>
+      <span class="cli-out">    → [第二章 …｜第 9 條] RRF=0.01923</span><br>
+      <span class="cli-out">    …</span><br><br>
+      <span class="cli-highlight">[5] 送入 LLM  ：qwen2.5:14b（context 7842 字，8 條）</span><br>
+      <span class="cli-highlight">    事實輔助  ：2 條事實條件一併送入</span><br>
+    </div>
+  </div>
+
+  <h3>標準輸出示例</h3>
+  <div class="cli-block">
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>Terminal — 標準輸出</div>
+    <div class="cli-body">
+      <span class="cli-out">============================================================</span><br>
+      <span class="cli-out">問題     ：申訴期限是多久？</span><br>
+      <span class="cli-out">查詢改寫  ：性騷擾事件被害人提出申訴之法定期限</span><br>
+      <span class="cli-out">相似度分數：0.7514  </span><span class="cli-highlight">✅ 回答</span><br>
+      <span class="cli-out">------------------------------------------------------------</span><br><br>
+      <span class="cli-highlight">根據第14條第1項至第2項，申訴期限依情況分為三種：</span><br><br>
+      <span class="cli-highlight">1. 一般性騷擾：知悉起 2 年內，自事件起不逾 5 年</span><br>
+      <span class="cli-highlight">2. 権勢性騷擾：知悉起 3 年內，自事件起不逾 7 年</span><br>
+      <span class="cli-highlight">3. 未成年被害人：成年後 3 年內（較長期限者從其規定）</span><br><br>
+      <span class="cli-out">------------------------------------------------------------</span><br>
+      <span class="cli-out">來源法條：</span><br>
+      <span class="cli-out">  [第四章 申訴及調查程序｜第 14 條]</span><br>
+      <span class="cli-out">  性騷擾事件被害人除可依相關法律請求協助外…</span>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="api">
+  <div class="sec-label">使用教學 · 03</div>
+  <h2>REST API</h2>
+
+  <h3>啟動服務</h3>
+  <pre><code>python3 -m uvicorn api:app --reload --port 8000</code></pre>
+  <p>啟動後開啟 <code>http://localhost:8000/docs</code> 可進入 FastAPI 自動生成的 Swagger UI，直接在網頁上測試所有端點。</p>
+
+  <h3>端點列表</h3>
+  <div class="endpoint">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/health</span>
+    <div class="endpoint-desc">健康檢查。確認服務與 Pipeline 是否正常運行。</div>
+  </div>
+  <div class="endpoint">
+    <span class="endpoint-method method-get">GET</span>
+    <span class="endpoint-path">/stats</span>
+    <div class="endpoint-desc">知識庫統計。回傳 chunk 總數、模型配置、相似度閾值。</div>
+  </div>
+  <div class="endpoint">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/ask</span>
+    <div class="endpoint-desc">主要問答端點。完整 RAG Pipeline，一次回傳全部結果。</div>
+  </div>
+  <div class="endpoint">
+    <span class="endpoint-method method-post">POST</span>
+    <span class="endpoint-path">/ask/stream</span>
+    <div class="endpoint-desc">串流版問答端點（SSE）。逐步回傳 meta → sources → token → done 事件，實現打字效果。</div>
+  </div>
+
+  <h3>請求格式（POST /ask）</h3>
+  <pre><code>curl -X POST http://localhost:8000/ask \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"question": "申訴期限是多久？"}'</span></code></pre>
+
+  <h3>回應格式（JSON）</h3>
+  <pre><code>{
+  <span class="str">"question"</span>   : <span class="str">"申訴期限是多久？"</span>,
+  <span class="str">"facts"</span>      : [<span class="str">"騷擾類型：一般性騷擾"</span>],               <span class="comment">// 提取的事實條件</span>
+  <span class="str">"sub_queries"</span>: [<span class="str">"性騷擾事件被害人提出申訴之法定期限"</span>], <span class="comment">// 拆解的子查詢</span>
+  <span class="str">"answer"</span>     : <span class="str">"根據第14條第1項，一般性騷擾事件..."</span>,
+  <span class="str">"sources"</span>    : [
+    {
+      <span class="str">"chapter"</span>: <span class="str">"第四章 申訴及調查程序"</span>,
+      <span class="str">"article"</span>: <span class="str">"第 14 條"</span>,
+      <span class="str">"text"</span>   : <span class="str">"性騷擾事件被害人除可依相關法律..."</span>
+    }
+  ],
+  <span class="str">"best_score"</span> : <span class="num">0.7514</span>,  <span class="comment">// Cosine 相似度（低於 0.40 則 answered=false）</span>
+  <span class="str">"answered"</span>   : <span class="kw">true</span>
+}</code></pre>
+
+  <h3>SSE 串流事件格式（POST /ask/stream）</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>事件類型</th><th>說明</th><th>包含欄位</th></tr>
+    <tr><td><code>meta</code></td><td>Decomposition 完成，第一個事件</td><td>facts, sub_queries</td></tr>
+    <tr><td><code>sources</code></td><td>檢索完成，包含法條列表</td><td>sources[], best_score</td></tr>
+    <tr><td><code>token</code></td><td>LLM 逐 token 輸出（多次）</td><td>content（單個字或詞）</td></tr>
+    <tr><td><code>rejected</code></td><td>相似度過低，拒答</td><td>message</td></tr>
+    <tr><td><code>done</code></td><td>串流結束</td><td>—</td></tr>
+  </table></div>
+
+  <pre><code><span class="comment"># JavaScript 接收 SSE 的標準寫法</span>
+<span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/ask/stream'</span>, {
+  method : <span class="str">'POST'</span>,
+  headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+  body   : <span class="fn">JSON.stringify</span>({ question }),
+});
+<span class="kw">const</span> reader = response.body.<span class="fn">getReader</span>();
+<span class="kw">while</span> (<span class="kw">true</span>) {
+  <span class="kw">const</span> { done, value } = <span class="kw">await</span> reader.<span class="fn">read</span>();
+  <span class="kw">if</span> (done) <span class="kw">break</span>;
+  <span class="comment">// 解析 "data: {...}\n\n" 格式，依 type 欄位處理各類事件</span>
+}</code></pre>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// 側邊欄高亮當前區塊
+const sections = document.querySelectorAll('[id]');
+const links    = document.querySelectorAll('.nav-link');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
