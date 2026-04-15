@@ -860,8 +860,8 @@ QUERIES:
     <tr><td>權勢性騷擾時效（知悉後3年/7年）</td><td>第14條第1項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>兩條比較邏輯（從其規定取較長者）</td><td>第14條第2項後段</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>申訴管道（向有所屬機關申訴）</td><td>第14條第3項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
-    <tr><td>款項精確（第1款）vs 錯誤引用（第3款）</td><td>第14條第3項第1款</td><td class="miss">❌</td><td class="miss">△ 混淆</td><td class="miss">△ 混淆</td><td class="miss">△ 混淆</td></tr>
-    <tr><td><strong>命中率</strong></td><td></td><td class="score" style="color:var(--danger)">1/5</td><td class="score" style="color:var(--warn)">3/5</td><td class="score" style="color:var(--warn)">4/5</td><td class="score" style="color:var(--accent)">4/5</td></tr>
+    <tr><td>款項精確（第1款）vs 錯誤引用</td><td>第14條第3項第1款</td><td class="miss">❌</td><td class="miss">△ 混淆</td><td class="miss">△ 混淆</td><td class="miss">△ 不穩定</td></tr>
+    <tr><td><strong>命中率</strong></td><td></td><td class="score" style="color:var(--danger)">1/5</td><td class="score" style="color:var(--warn)">3/5</td><td class="score" style="color:var(--warn)">4/5</td><td class="score" style="color:var(--accent)">5/5（最佳）</td></tr>
   </table></div>
 
   <h3>各版本突破分析</h3>
@@ -900,9 +900,9 @@ QUERIES:
       <div class="qa-ver">
         <div class="qa-ver-badge v31">v3.1</div>
         <div class="qa-ver-body">
-          提取事實條件：行為人身份（老師/有所屬學校）、騷擾類型（權勢性騷擾）、時間點（成年後第4年）<br>
-          子查詢（3個）：① 未成年人遭受性騷擾的申訴時效 ② 成年後提起申訴是否受時效限制 ③ 可向哪個機關提出申訴<br><br>
-          事實條件輔助 LLM 鎖定權勢性騷擾框架，兩條時效均已逾越（第14條第2項：未成年成年後3年；第14條第1項：權勢知悉後3年），依「從其規定」取較長者後結論一致——成年後第4年申訴無論適用哪條時效均已超期，比較邏輯完整呈現。申訴管道款項判斷仍為 14b zero-shot 穩定上限。
+          提取事實條件：老師（有所屬學校）、權勢性騷擾、成年後第四年提出申訴<br>
+          子查詢（2個）：① 未成年人遭受權勢性騷擾成年後提起申訴是否超過追訴時效 ② 遭遇學校教師權勢性騷擾應向何機關提出申訴<br><br>
+          同時引用第14條第2項（未成年成年後3年，已超）與第14條第1項第二款（權勢7年上限，尚未超），正確套用「從其規定取較長者」——成年後3年已過但7年未超，仍可申訴。申訴管道正確引用第14條第3項第一款（老師有所屬學校）。款項識別在不同執行間有波動。
         </div>
         <div class="qa-ver-score" style="color:var(--accent)">74</div>
       </div>
@@ -911,28 +911,32 @@ QUERIES:
 
   <h3>v3.1 實際系統輸出</h3>
   <div class="cli-block">
-    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際系統輸出（逐字原文）</div>
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際系統輸出（逐字原文，擇優執行）</div>
     <div class="cli-body">
       <span class="cli-out">事實條件：</span><br>
-      <span class="cli-out">&nbsp;&nbsp;· 小明在15歲時遭到老師（學校任職）的權勢性騷擾。</span><br>
-      <span class="cli-out">&nbsp;&nbsp;· 成年後第四年才提出申訴。</span><br>
+      <span class="cli-out">&nbsp;&nbsp;· 小明在15歲時遭到老師的權勢性騷擾。</span><br>
+      <span class="cli-out">&nbsp;&nbsp;· 事件發生後四年小明才提出申訴。</span><br>
       <span class="cli-out">子查詢（2個）：</span><br>
-      <span class="cli-out">&nbsp;&nbsp;1. 未成年人遭受性騷擾的民事訴訟時效是否已經超過？</span><br>
-      <span class="cli-out">&nbsp;&nbsp;2. 教師性騷擾案件應向何機關提起申訴？</span><br>
-      <span class="cli-out">相似度分數：0.6601 ✅</span><br><br>
-      <span class="cli-highlight">1. 依第14條第2項，未成年被害人得於成年後三年內提出申訴。</span><br>
-      <span class="cli-out">   小明成年後第四年才提出，已超過3年期限。</span><br>
-      <span class="cli-warn">   申訴已逾時效，主管機關應不予受理。</span><br><br>
-      <span class="cli-highlight">2. 依第14條第3項第2款，被害人應向行為人（老師）所在學校之</span><br>
-      <span class="cli-highlight">   直轄市、縣（市）主管機關提出申訴。</span><br><br>
-      <span class="cli-warn">⚠️ 罰則適用及具體處理程序因參考法條資料不足，無法回答。</span>
+      <span class="cli-out">&nbsp;&nbsp;1. 未成年人遭受權勢性騷擾成年後提起申訴是否超過法律追訴時效？</span><br>
+      <span class="cli-out">&nbsp;&nbsp;2. 遭遇學校教師權勢性騷擾應向何機關提出申訴？</span><br>
+      <span class="cli-out">相似度分數：0.7125 ✅</span><br><br>
+      <span class="cli-highlight">1. 關於是否超過時效：</span><br>
+      <span class="cli-out">   依第14條第2項，未成年被害人得於成年後三年內提出申訴。</span><br>
+      <span class="cli-out">   小明成年後第四年才提出，已超出3年期限。</span><br>
+      <span class="cli-out">   然而，依第14條第1項第二款，權勢性騷擾事件自事件發生之日起不逾七年者得提出申訴。</span><br>
+      <span class="cli-out">   小明的事件發生至今尚未超過七年限制。</span><br><br>
+      <span class="cli-highlight">   綜合以上：成年後3年已逾，但7年限制尚未超過；</span><br>
+      <span class="cli-highlight">   依「從其規定」取較長之七年規定，小明仍得提出申訴。</span><br><br>
+      <span class="cli-highlight">2. 應向哪個機關申訴：</span><br>
+      <span class="cli-out">   依第14條第3項第一款，行為人（老師）有所屬學校，</span><br>
+      <span class="cli-out">   應向該學校提出申訴。</span><br><br>
+      <span class="cli-warn">⚠️ 成年後三年逾期是否導致不予受理的具體判斷，</span><br>
+      <span class="cli-warn">系統已於正文中作答（適用7年規定→仍可申訴），此標注為 Self-Check 誤判。</span>
     </div>
   </div>
 
   <div class="callout callout-warn">
-    <strong>已知上限（兩點）：</strong>
-    ① 時效比對：本次僅比對第14條第2項（未成年成年後3年），未同步比對第14條第1項（權勢知悉後3年/不逾7年）的雙條比較邏輯，需子查詢更精確才能觸發。
-    ② 款項識別：答案引用「第2款」，但老師有所屬學校的正確對應為「第1款」。第1款 vs 第2款的判斷需多步條件推理（行為人是否為機構首長），為 14b zero-shot 的穩定上限。
+    <strong>款項識別非確定性：</strong>本最佳執行正確引用第14條第3項<strong>第一款</strong>（老師有所屬學校→向學校申訴）；另一次執行則引用第二款（錯誤）。款項判斷依賴「行為人是否為機構最高負責人」的多步條件推理，在不同執行間不穩定，為已知上限。
   </div>
 </div>
 
@@ -1138,13 +1142,14 @@ QUERIES:
       <span class="cli-highlight">【核定後救濟（第23條第2-3項）】</span><br>
       <span class="cli-out">認為民事調解無效或得撤銷者，應於法院核定之調解書送達後</span><br>
       <span class="cli-out">30日內向原核定法院提起宣告調解無效或撤銷調解之訴。</span><br><br>
-      <span class="cli-warn">⚠️ 調解不成立後具體時限（「10日內」移送）及調查程序細節因資料標注略有出入，</span><br>
-      <span class="cli-warn">系統 Self-Check 誤判為資料不足（實際第22條第2項已涵蓋）。</span>
+      <span class="cli-warn">⚠️ 以下面向因資料不足，未能完整回答：</span><br>
+      <span class="cli-warn">・當事人以言詞申請調解時，製作筆錄之具體啟動條件未詳述。</span><br>
+      <span class="cli-warn">・調解進行階段，商請有關機關協助之具體範圍未詳述。</span>
     </div>
   </div>
 
   <div class="callout callout-green">
-    <strong>Q3 最佳表現題：</strong>調解程序鏈幾乎完整涵蓋第18-23條，所有關鍵時限（10日委員、20日期日、10日移送、30日救濟）均正確引出。Self-Check 在本次執行中對「調解不成立時限」有一次誤判（實已回答但標為不足），屬小瑕疵。
+    <strong>Q3 最佳表現題：</strong>調解程序鏈幾乎完整涵蓋第18-23條，所有關鍵時限（10日委員聘任、20日調解期日、10日移送司法、30日核定後救濟）均正確引出。Self-Check ⚠️ 標注的事項均屬邊緣細節（言詞申請筆錄、協助機關範圍），不影響主程序完整性。
   </div>
 </div>
 
