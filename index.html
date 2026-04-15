@@ -276,7 +276,7 @@ li strong{color:var(--text)}
     <a class="nav-link" href="#faiss">FAISS HNSW</a>
     <a class="nav-link" href="#metric">距離度量選擇</a>
     <a class="nav-link" href="#bm25">BM25 混合設計</a>
-    <a class="nav-link" href="#rrf">三層 RRF</a>
+    <a class="nav-link" href="#rrf">兩層 RRF</a>
   </div>
 
   <div class="nav-section">
@@ -291,10 +291,10 @@ li strong{color:var(--text)}
     <div class="nav-section-title">壓力測試</div>
     <a class="nav-link" href="#test-design">測試設計邏輯</a>
     <a class="nav-link" href="#evolution">版本演進歷程</a>
-    <a class="nav-link" href="#summary">版本對比總表</a>
     <a class="nav-link" href="#q1">Q1：時效＋申訴管道</a>
     <a class="nav-link" href="#q2">Q2：三層責任</a>
     <a class="nav-link" href="#q3">Q3：調解程序鏈</a>
+    <a class="nav-link" href="#summary">版本對比總表</a>
   </div>
 
   <div class="nav-section">
@@ -570,28 +570,28 @@ li strong{color:var(--text)}
     <tr><td>「申訴期限」</td><td>直接命中「申訴」標籤</td><td>語意向量也接近第14條</td></tr>
     <tr><td>「刑事責任」</td><td>命中 [刑事責任] 標籤 ← <span class="text-accent">關鍵</span></td><td>與第25條原文語意距離偏遠</td></tr>
     <tr><td>「多久可以提告」</td><td>「提告」斷詞可能找不到對應詞</td><td>語意向量找到「申訴期限」← <span class="text-accent">關鍵</span></td></tr>
-    <tr><td>「権勢性騷擾調解」</td><td>兩個關鍵字都能命中</td><td>複合概念的向量也能找到</td></tr>
+    <tr><td>「權勢性騷擾調解」</td><td>兩個關鍵字都能命中</td><td>複合概念的向量也能找到</td></tr>
   </table></div>
 </div>
 
 <div class="section" id="rrf">
   <div class="sec-label">向量資料庫 · 04</div>
-  <h2>三層 RRF（Reciprocal Rank Fusion）設計</h2>
+  <h2>兩層 RRF（Reciprocal Rank Fusion）設計</h2>
 
   <div class="formula">score(d) = Σ  1 / (rank(d) + k)  &emsp; k = 60</div>
 
   <h3>為何不直接比較原始分數？</h3>
   <p>BM25 分數可以是任意正數（詞頻越高越大），Cosine 分數在 [0,1] 之間，兩種尺度無法直接比較。RRF 只看「排名第幾名」不看原始分數，轉換後可以直接相加。k=60 是學術界標準值（Cormack et al. 2009），用來防止排名第1的文件得分過高主導結果。</p>
 
-  <h3>本系統的三個 RRF 層次</h3>
+  <h3>本系統的兩個 RRF 層次</h3>
   <div class="ver-timeline">
     <div class="ver-item">
       <div class="ver-badge">層次 1</div>
       <div class="ver-title">單次查詢內：BM25 + Dense 合併</div>
-      <div class="ver-body">每個子查詢各自跑 BM25 和 Dense 兩路，各取 Top-6 候選（12個），用 RRF 合併排名得到該子查詢的最終 Top-6。</div>
+      <div class="ver-body">每個子查詢各自跑 BM25 和 Dense 兩路，各取 Top-6 候選（12個），用 RRF 合併排名得到該子查詢的最終 Top-6。BM25 和 FAISS 是兩套獨立索引，在記憶體中平行執行，只有在這一步才匯合。</div>
     </div>
     <div class="ver-item latest">
-      <div class="ver-badge">層次 3</div>
+      <div class="ver-badge">層次 2</div>
       <div class="ver-title">跨子查詢：Cross-Query RRF（最關鍵）</div>
       <div class="ver-body">所有子查詢的結果統一累加：<code>chunk_rrf[id] += 1.0 / (rank + 60)</code>。在多個子查詢中都排名靠前的 chunk 因多次累加而得到更高最終分數，相當於「多條子查詢的共識排名」。最終取 Top-8 unique chunks 送入 LLM。</div>
     </div>
@@ -617,12 +617,12 @@ li strong{color:var(--text)}
   <p>LLM 分析問題後決定拆解粒度。若問題涉及「法律責任」，刑事、行政、民事三類<strong>強制各自獨立</strong>為子查詢：</p>
 
   <pre><code><span class="comment">── 輸入問題 ──</span>
-公司 25 名員工，負責人對員工実施権勢性騷擾後將其降職，三方面責任？
+公司 25 名員工，負責人對員工実施權勢性騷擾後將其降職，三方面責任？
 
 <span class="comment">── 拆解輸出 ──</span>
 QUERIES:
-1. 行為人因権勢性騷擾遭受何種<span class="kw">刑事</span>罰則（有期徒刑或罰金）
-2. 行為人因権勢性騷擾遭受何種<span class="kw">行政</span>罰則（罰鍰金額及裁罰機關）
+1. 行為人因權勢性騷擾遭受何種<span class="kw">刑事</span>罰則（有期徒刑或罰金）
+2. 行為人因權勢性騷擾遭受何種<span class="kw">行政</span>罰則（罰鍰金額及裁罰機關）
 3. 被害人得請求之<span class="kw">民事</span>損害賠償及懲罰性賠償金
 4. 公司（機構）因未防止事件發生面臨之<span class="kw">行政</span>罰鍰
 5. 公司因<span class="kw">降職</span>行為可能面臨之行政法律後果
@@ -644,7 +644,7 @@ QUERIES:
 
 FACTS:
 - 行為人身份：老師（有所屬學校，非機構最高負責人）
-- 騷擾類型：権勢性騷擾
+- 騷擾類型：權勢性騷擾
 - 時間點：成年後第 4 年才提出申訴
 
 QUERIES:
@@ -656,7 +656,7 @@ QUERIES:
 
   <pre><code>【事實條件（供條款適用比對）】
 - 行為人身份：老師（有所屬學校，非機構最高負責人）
-- 騷擾類型：権勢性騷擾
+- 騷擾類型：權勢性騷擾
 - 時間點：成年後第 4 年才提出申訴
 
 【參考法條】
@@ -756,10 +756,25 @@ QUERIES:
   <p>三道測試題均為<strong>跨多條文的複合型問題</strong>，設計目的是讓單一向量無法同時覆蓋所有面向，強制暴露系統的檢索上限。</p>
 
   <div class="tbl-wrap"><table>
-    <tr><th>題目</th><th>問題摘要</th><th>涉及法條</th><th>核心難點</th></tr>
-    <tr><td><strong>Q1</strong></td><td>未成年 + 権勢 + 成年後第4年申訴，時效？管道？</td><td>第2、14、15條</td><td>需比較兩條期限取較長者（「從其規定」邏輯）+ 款項條件推理</td></tr>
-    <tr><td><strong>Q2</strong></td><td>25員工 + 負責人権勢騷擾 + 降職報復，三層責任？</td><td>第2、7、9、12、13、25、27、28、29條（9條）</td><td>刑事/行政/民事/機構/降職五個面向，單一向量只能找到1-2條</td></tr>
-    <tr><td><strong>Q3</strong></td><td>調查後申請調解，流程時限？效力？核定後救濟？</td><td>第16、18、19、20、21、22、23條（7條）</td><td>需依序串起七個條文的程序鏈，每條時限數字不同</td></tr>
+    <tr><th>題目</th><th>完整問題</th><th>涉及法條</th><th>核心難點</th></tr>
+    <tr>
+      <td><strong>Q1</strong></td>
+      <td style="font-style:italic;color:var(--text)">「小明在未成年時期（15歲）遭到老師（在學校任職）的權勢性騷擾。小明現在已成年，事件發生在成年後第四年才提出申訴。請問：① 申訴是否超過時效？② 應向哪個機關申訴？」</td>
+      <td>第2、14、15條</td>
+      <td>需比較兩條期限取較長者（「從其規定」邏輯）+ 款項條件推理</td>
+    </tr>
+    <tr>
+      <td><strong>Q2</strong></td>
+      <td style="font-style:italic;color:var(--text)">「某公司有25名員工，公司負責人對員工實施權勢性騷擾，事後將該員工降職。請問：行為人的刑事責任為何？機構的行政責任為何？被害人可主張哪些民事損害賠償？降職行為有何法律效果？」</td>
+      <td>第2、7、9、12、13、25、27、28、29條（9條）</td>
+      <td>刑事/行政/民事/機構/降職五個面向，單一向量只能找到1-2條</td>
+    </tr>
+    <tr>
+      <td><strong>Q3</strong></td>
+      <td style="font-style:italic;color:var(--text)">「性騷擾案件調查完畢後申請調解的完整流程是什麼？各階段的時限規定？調解成立後的法律效力？調解核定後不服應如何救濟？」</td>
+      <td>第16、18、19、20、21、22、23條（7條）</td>
+      <td>需依序串起七個條文的程序鏈，每條時限數字不同</td>
+    </tr>
   </table></div>
 
   <h3>評分方法：Claude 文意理解作為標準答案</h3>
@@ -827,36 +842,6 @@ QUERIES:
   </div>
 </div>
 
-<!-- Summary -->
-<div class="section" id="summary">
-  <div class="sec-label">壓力測試 · 03</div>
-  <h2>四版對比總表</h2>
-
-  <div class="tbl-wrap"><table>
-    <tr><th>版本</th><th>核心架構變更</th><th>Q1</th><th>Q2</th><th>Q3</th><th>平均</th></tr>
-    <tr>
-      <td><strong>v1.0</strong></td>
-      <td>Single-Query + HybridRetrieval + TOP_K=3</td>
-      <td class="score" style="color:var(--danger)">40</td><td class="score" style="color:var(--danger)">15</td><td class="score" style="color:var(--warn)">55</td><td class="score" style="color:var(--danger)">37</td>
-    </tr>
-    <tr>
-      <td><strong>v2.0</strong></td>
-      <td>Adaptive Decomposition（4子查詢）+ Cross-Query RRF + TOP_K=6</td>
-      <td class="score" style="color:var(--warn)">62</td><td class="score" style="color:var(--warn)">55</td><td class="score" style="color:var(--accent)">82</td><td class="score" style="color:var(--warn)">66</td>
-    </tr>
-    <tr>
-      <td><strong>v3.0</strong></td>
-      <td>LLM語意標籤 + 刑/行/民Prompt + Self-Check</td>
-      <td class="score" style="color:var(--warn)">68</td><td class="score" style="color:var(--warn)">70</td><td class="score" style="color:var(--accent)">88</td><td class="score" style="color:var(--warn)">75</td>
-    </tr>
-    <tr style="background:rgba(99,102,241,.06)">
-      <td><strong>v3.1 ✦</strong></td>
-      <td>Fact Extraction + 6子查詢 + TOP_K=8 + TIMEOUT=180s</td>
-      <td class="score" style="color:var(--accent)">74</td><td class="score" style="color:var(--accent)">82</td><td class="score" style="color:var(--accent)">92</td><td class="score grad-text" style="font-size:18px">83</td>
-    </tr>
-  </table></div>
-</div>
-
 <!-- Q1 -->
 <div class="section" id="q1">
   <div class="sec-label">壓力測試 · Q1</div>
@@ -864,14 +849,14 @@ QUERIES:
 
   <div class="card" style="margin-bottom:20px">
     <h4 style="margin-top:0">完整問題</h4>
-    <p style="color:var(--text);font-style:italic">「小明在未成年時期（15歲）遭到老師（在學校任職）的権勢性騷擾。小明現在已成年，事件發生在成年後第四年才提出申訴。請問：① 申訴是否超過時效？② 應向哪個機關申訴？」</p>
+    <p style="color:var(--text);font-style:italic">「小明在未成年時期（15歲）遭到老師（在學校任職）的權勢性騷擾。小明現在已成年，事件發生在成年後第四年才提出申訴。請問：① 申訴是否超過時效？② 應向哪個機關申訴？」</p>
   </div>
 
   <h3>法條命中分析</h3>
   <div class="tbl-wrap"><table>
     <tr><th>面向</th><th>關鍵法條</th><th>v1.0</th><th>v2.0</th><th>v3.0</th><th>v3.1</th></tr>
     <tr><td>未成年時效（成年後3年）</td><td>第14條第2項</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
-    <tr><td>権勢性騷擾時效（知悉後3年/7年）</td><td>第14條第1項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>權勢性騷擾時效（知悉後3年/7年）</td><td>第14條第1項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>兩條比較邏輯（從其規定取較長者）</td><td>第14條第2項後段</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>申訴管道（向有所屬機關申訴）</td><td>第14條第3項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>款項精確（第1款）vs 錯誤引用（第3款）</td><td>第14條第3項第1款</td><td class="miss">❌</td><td class="miss">△ 混淆</td><td class="miss">△ 混淆</td><td class="miss">△ 混淆</td></tr>
@@ -887,22 +872,37 @@ QUERIES:
     <div class="qa-versions">
       <div class="qa-ver">
         <div class="qa-ver-badge">v1.0</div>
-        <div class="qa-ver-body">命中第14條，結論正確（申訴逾越時效），但未展現「從其規定」的比較邏輯。申訴管道引用第3款（無所屬機關），應為第1款（有所屬學校）。</div>
+        <div class="qa-ver-body">單一向量搜尋，命中第14條。結論正確（申訴逾越時效），但未展現「從其規定」的比較邏輯。申訴管道誤引第3款（無所屬機關情境），應為第1款（有所屬學校）。</div>
         <div class="qa-ver-score" style="color:var(--danger)">40</div>
       </div>
       <div class="qa-ver">
         <div class="qa-ver-badge">v2.0</div>
-        <div class="qa-ver-body">3個子查詢（時效/是否超時/申訴管道），正確識別成年後3年規定，並正確說明有所屬機關應向機關申訴（第14條第3項），但款項仍有細節混淆。</div>
+        <div class="qa-ver-body">
+          子查詢（3個）：<br>
+          ① 未成年人遭受性騷擾的民事訴訟時效是多久？<br>
+          ② 被害人在成年後第4年提起申訴，是否超過了民事訴訟時效？<br>
+          ③ 遭受性騷擾案件可向哪個機關提出申訴？<br><br>
+          正確識別成年後3年規定，並說明有所屬機關應向機關申訴（第14條第3項）。「從其規定」比較邏輯仍未完整呈現，款項細節有混淆。
+        </div>
         <div class="qa-ver-score" style="color:var(--warn)">62</div>
       </div>
       <div class="qa-ver">
         <div class="qa-ver-badge">v3.0</div>
-        <div class="qa-ver-body">「從其規定」比較邏輯出現在答案中（第14條第2項），正確引用両條期限並比較。申訴管道款項仍有混淆。</div>
+        <div class="qa-ver-body">
+          子查詢（2個）：<br>
+          ① 被害人小明在成年後第四年提起性騷擾申訴，是否超過法律規定的訴訟時效？<br>
+          ② 對於未成年人遭受性騷擾案件，被害人向何機關提出申訴？<br><br>
+          「從其規定」比較邏輯首次出現（第14條第2項），正確引用兩條期限並比較。申訴管道款項仍有混淆。
+        </div>
         <div class="qa-ver-score" style="color:var(--warn)">68</div>
       </div>
       <div class="qa-ver">
         <div class="qa-ver-badge v31">v3.1</div>
-        <div class="qa-ver-body">事實條件「行為人：老師（有所屬學校）」輔助 LLM 鎖定権勢性騷擾框架，比較邏輯更完整。申訴管道款項仍為本系統在 14b zero-shot 下的穩定上限。</div>
+        <div class="qa-ver-body">
+          提取事實條件：行為人身份（老師/有所屬學校）、騷擾類型（權勢性騷擾）、時間點（成年後第4年）<br>
+          子查詢（3個）：① 未成年人遭受性騷擾的申訴時效 ② 成年後提起申訴是否受時效限制 ③ 可向哪個機關提出申訴<br><br>
+          事實條件輔助 LLM 鎖定權勢性騷擾框架，兩條比較邏輯（未成年3年 vs 權勢7年，取較長者）明確呈現。申訴管道款項判斷仍為 14b zero-shot 穩定上限。
+        </div>
         <div class="qa-ver-score" style="color:var(--accent)">74</div>
       </div>
     </div>
@@ -912,11 +912,11 @@ QUERIES:
   <div class="cli-block">
     <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 回答（qwen2.5:14b）</div>
     <div class="cli-body">
-      <span class="cli-highlight">根據事實條件（行為人：老師，有所屬學校；騷擾類型：権勢性騷擾；時間：成年後第4年提出申訴），分析如下：</span><br><br>
+      <span class="cli-highlight">根據事實條件（行為人：老師，有所屬學校；騷擾類型：權勢性騷擾；時間：成年後第4年提出申訴），分析如下：</span><br><br>
       <span class="cli-highlight">【① 申訴是否超過時效】</span><br><br>
       <span class="cli-out">依第14條第2項，未成年被害人得於成年後3年內申訴。</span><br>
       <span class="cli-out">本案被害人成年後第4年提出申訴，已逾3年期限。</span><br><br>
-      <span class="cli-out">依第14條第1項，権勢性騷擾之申訴期限為知悉後3年內、自事件起不逾7年。</span><br>
+      <span class="cli-out">依第14條第1項，權勢性騷擾之申訴期限為知悉後3年內、自事件起不逾7年。</span><br>
       <span class="cli-out">本案事件發生於未成年時期，成年後第4年提出，亦逾此限。</span><br><br>
       <span class="cli-out">依第14條第2項後段「從其規定，適用較長期限」，兩條均已逾越，</span><br>
       <span class="cli-warn">申訴已超過法定時效，無論依哪條規定計算均不得申訴。</span><br><br>
@@ -940,14 +940,14 @@ QUERIES:
 
   <div class="card" style="margin-bottom:20px">
     <h4 style="margin-top:0">完整問題</h4>
-    <p style="color:var(--text);font-style:italic">「某公司有25名員工，公司負責人對員工實施権勢性騷擾，事後將該員工降職。請問：行為人的刑事責任為何？機構的行政責任為何？被害人可主張哪些民事損害賠償？降職行為有何法律效果？」</p>
+    <p style="color:var(--text);font-style:italic">「某公司有25名員工，公司負責人對員工實施權勢性騷擾，事後將該員工降職。請問：行為人的刑事責任為何？機構的行政責任為何？被害人可主張哪些民事損害賠償？降職行為有何法律效果？」</p>
   </div>
 
   <h3>法條命中分析</h3>
   <div class="tbl-wrap"><table>
     <tr><th>面向</th><th>關鍵法條</th><th>v1.0</th><th>v2.0</th><th>v3.0</th><th>v3.1</th></tr>
-    <tr><td>刑事責任</td><td>第25條（2年以下，権勢加重1.5倍）</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
-    <tr><td>行政罰鍰（行為人）</td><td>第27條（権勢：6~60萬）</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>刑事責任</td><td>第25條（2年以下，權勢加重1.5倍）</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>行政罰鍰（行為人）</td><td>第27條（權勢：6~60萬）</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>降職報復行政罰鍰</td><td>第29條（1~10萬，限期改正）</td><td class="miss">❌</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓ 首次</td></tr>
     <tr><td>差別待遇禁止/損害賠償</td><td>第9條</td><td class="miss">❌</td><td class="hit">✓</td><td class="miss">❌</td><td class="hit">✓</td></tr>
     <tr><td>民事損害賠償+懲罰性</td><td>第12條（1~3倍）</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
@@ -962,22 +962,40 @@ QUERIES:
     <div class="qa-versions">
       <div class="qa-ver">
         <div class="qa-ver-badge">v1.0</div>
-        <div class="qa-ver-body">問題 embed 成單一向量，漂移到申訴程序附近，完全未命中罰則章（第25-29條）與差別待遇（第9條）。9條中只找到2條。</div>
+        <div class="qa-ver-body">單一向量漂移到申訴程序附近，完全未命中罰則章（第25-29條）與差別待遇（第9條）。9條中只找到第12條（損害賠償）和第13條（機構協助義務）2條。</div>
         <div class="qa-ver-score" style="color:var(--danger)">15</div>
       </div>
       <div class="qa-ver">
         <div class="qa-ver-badge">v2.0</div>
-        <div class="qa-ver-body">4個子查詢（刑事/行政/民事/降職），分別搜尋後命中第27條（行政罰鍰）、第9條（差別待遇），命中率 2→5/9。但子查詢「刑事責任」的向量離第25條原文仍有距離。</div>
+        <div class="qa-ver-body">
+          子查詢（4個）：<br>
+          ① 行為人因權勢性騷擾面臨的刑事責任<br>
+          ② 公司因未防止權勢性騷擾事件發生而面臨的行政責任<br>
+          ③ 受害員工可對行為人提起的民事損害賠償訴訟<br>
+          ④ 公司因降職行為可能面臨的民事法律後果<br><br>
+          第27條（行政罰鍰）、第9條（差別待遇）首次命中，命中率 2→5/9。子查詢「刑事責任」的向量與第25條原文語意距離偏遠，刑事面向仍空白。
+        </div>
         <div class="qa-ver-score" style="color:var(--warn)">55</div>
       </div>
       <div class="qa-ver">
         <div class="qa-ver-badge">v3.0</div>
-        <div class="qa-ver-body">語意標籤 [刑事責任][有期徒刑] 融入第25條的 embed_text，子查詢「刑事罰則（有期徒刑或罰金）」終於命中第25條。首次看到刑事責任回答。Self-Check 正確標出降職面向資料不足。</div>
+        <div class="qa-ver-body">
+          子查詢（4個）：<br>
+          ① 行為人因權勢性騷擾遭受何種刑事罰則（有期徒刑或罰金）<br>
+          ② 公司因未防止權勢性騷擾事件遭受何種刑事罰則<br>
+          ③ 行為人因權勢性騷擾遭受何種行政罰則（罰鍰及裁罰機關）<br>
+          ④ 公司因未防止權勢性騷擾事件遭受何種行政罰則<br><br>
+          語意標籤 [刑事責任][有期徒刑] 融入第25條，子查詢①終於命中第25條（刑事首次出現）。Self-Check 正確標出降職面向資料不足，不再亂編。
+        </div>
         <div class="qa-ver-score" style="color:var(--warn)">70</div>
       </div>
       <div class="qa-ver">
         <div class="qa-ver-badge v31">v3.1</div>
-        <div class="qa-ver-body">6個子查詢（刑事×行為人、行政×行為人、民事×行為人、刑事×公司、行政×公司、降職×法律效果），「降職」獨立子查詢首次命中第29條（差別待遇行政罰鍰 1~10萬）。答案格式清晰分三層逐一引用。</div>
+        <div class="qa-ver-body">
+          提取事實條件：公司負責人（權勢性騷擾）、25名員工、降職報復<br>
+          子查詢（6個）：刑事×行為人、行政×行為人、民事×行為人、刑事×公司、行政×公司、降職×法律效果<br><br>
+          「降職」成為獨立子查詢，第29條史上首次命中（1~10萬行政罰鍰）。答案依刑事/行政/民事三層逐一引用，格式最清晰。
+        </div>
         <div class="qa-ver-score" style="color:var(--accent)">82</div>
       </div>
     </div>
@@ -987,13 +1005,13 @@ QUERIES:
   <div class="cli-block">
     <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 回答（qwen2.5:14b）</div>
     <div class="cli-body">
-      <span class="cli-highlight">根據事實條件（公司負責人；権勢性騷擾；25名員工；降職報復）：</span><br><br>
+      <span class="cli-highlight">根據事實條件（公司負責人；權勢性騷擾；25名員工；降職報復）：</span><br><br>
       <span class="cli-highlight">【一、刑事責任（第25條）】</span><br>
       <span class="cli-out">依第25條第1項，行為人處2年以下有期徒刑、拘役或科或併科30萬元以下罰金。</span><br>
-      <span class="cli-out">依第25條第2項，因屬権勢性騷擾，加重其刑至二分之一（最高可至3年）。</span><br>
+      <span class="cli-out">依第25條第2項，因屬權勢性騷擾，加重其刑至二分之一（最高可至3年）。</span><br>
       <span class="cli-out">本罪為告訴乃論。</span><br><br>
       <span class="cli-highlight">【二、行政責任】</span><br>
-      <span class="cli-out">行為人行政罰鍰（第27條）：依第27條第2項，権勢性騷擾由主管機關</span><br>
+      <span class="cli-out">行為人行政罰鍰（第27條）：依第27條第2項，權勢性騷擾由主管機關</span><br>
       <span class="cli-out">處6萬元以上60萬元以下罰鍰。</span><br><br>
       <span class="cli-out">降職報復行政罰鍰（第29條）：依第29條，機構對被害人實施差別待遇（降職），</span><br>
       <span class="cli-out">由主管機關處1萬元以上10萬元以下罰鍰，並得令限期改正。</span><br><br>
@@ -1023,7 +1041,7 @@ QUERIES:
   <h3>法條命中分析</h3>
   <div class="tbl-wrap"><table>
     <tr><th>程序</th><th>關鍵法條</th><th>v1.0</th><th>v2.0</th><th>v3.0</th><th>v3.1</th></tr>
-    <tr><td>権勢性騷擾不適用調解</td><td>第18條第1項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>權勢性騷擾不適用調解</td><td>第18條第1項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>委員聘任：<strong>10日</strong>內</td><td>第19條</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>調解期日：聘後<strong>20日</strong>內</td><td>第19條</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>調解書製作</td><td>第21條</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
@@ -1037,22 +1055,39 @@ QUERIES:
     <div class="qa-versions">
       <div class="qa-ver">
         <div class="qa-ver-badge">v1.0</div>
-        <div class="qa-ver-body">命中第21、22條，部分覆蓋調解書製作。所有「時限」（10日、20日、30日）均未提及，権勢性騷擾排除調解完全未提。</div>
+        <div class="qa-ver-body">單一向量只命中第21條（調解書）、第22條（不成立），部分覆蓋調解書製作。所有時限（10日、20日、30日）均未提及，權勢性騷擾排除調解完全遺漏。</div>
         <div class="qa-ver-score" style="color:var(--warn)">55</div>
       </div>
       <div class="qa-ver">
         <div class="qa-ver-badge">v2.0</div>
-        <div class="qa-ver-body">4個子查詢拆解，命中第18、21、22、23條。補齊法律效力（民事確定判決）和30日救濟期限。第19條（10日/20日）仍未命中。</div>
+        <div class="qa-ver-body">
+          子查詢（4個）：<br>
+          ① 調解程序申訴期限<br>
+          ② 調解不成立時的處理方式<br>
+          ③ 調解核定後的法律效力<br>
+          ④ 對調解核定結果不服的救濟途徑<br><br>
+          首次命中第18條（權勢排除）、第23條（民事確定判決效力）、第23條第3項（30日救濟）。第19條（委員10日/期日20日）仍未命中——語意太隱晦。
+        </div>
         <div class="qa-ver-score" style="color:var(--warn)">82</div>
       </div>
       <div class="qa-ver">
         <div class="qa-ver-badge">v3.0</div>
-        <div class="qa-ver-body">語意標籤 [時效規定][性騷擾調解] 拉近了第19條的距離，首次命中。委員10日聘任、期日20日數字出現在答案中，顯著提升回答品質。</div>
+        <div class="qa-ver-body">
+          子查詢（4個）：<br>
+          ① 被害人申請調解之完整流程及相應時限規定<br>
+          ② 性騷擾調解不成時之處理方式與程序<br>
+          ③ 性騷擾調解核定結果之法律效力<br>
+          ④ 對調解核定結果不服時之救濟途徑<br><br>
+          語意標籤 [時效規定][性騷擾調解] 拉近第19條，首次命中。委員10日聘任、期日20日兩個時限數字首次出現在答案中，品質顯著提升。
+        </div>
         <div class="qa-ver-score" style="color:var(--accent)">88</div>
       </div>
       <div class="qa-ver">
         <div class="qa-ver-badge v31">v3.1</div>
-        <div class="qa-ver-body">TOP_K=8 補回第22條（不成立→10日內移送司法機關）和第20條（委員義務）。調解程序鏈幾乎完整涵蓋第18-24條。Self-Check 主動標出刑事調解救濟面向資料不足。</div>
+        <div class="qa-ver-body">
+          子查詢（4個）：調解流程時限、不成立處理、核定效力、不服救濟<br><br>
+          TOP_K=8 補回第22條（不成立→10日內移送）和第20條（委員義務）。調解程序鏈幾乎完整涵蓋第18-24條。Self-Check 主動標出刑事調解救濟面向資料不足，加 ⚠️ 標注。
+        </div>
         <div class="qa-ver-score" style="color:var(--accent)">92</div>
       </div>
     </div>
@@ -1063,9 +1098,9 @@ QUERIES:
     <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 回答（qwen2.5:14b）</div>
     <div class="cli-body">
       <span class="cli-highlight">依第18條至第23條，調解程序說明如下：</span><br><br>
-      <span class="cli-highlight">【前提：権勢性騷擾不得申請調解（第18條第1項）】</span><br>
-      <span class="cli-out">依第18條第1項，権勢性騷擾事件之被害人不得申請調解。</span><br>
-      <span class="cli-out">若本案屬権勢性騷擾，應直接進入司法程序，以下程序僅適用一般性騷擾案件。</span><br><br>
+      <span class="cli-highlight">【前提：權勢性騷擾不得申請調解（第18條第1項）】</span><br>
+      <span class="cli-out">依第18條第1項，權勢性騷擾事件之被害人不得申請調解。</span><br>
+      <span class="cli-out">若本案屬權勢性騷擾，應直接進入司法程序，以下程序僅適用一般性騷擾案件。</span><br><br>
       <span class="cli-highlight">【調解申請與期日（第18、19條）】</span><br>
       <span class="cli-out">被害人得向直轄市、縣（市）主管機關申請調解。</span><br>
       <span class="cli-out">主管機關應於10日內聘任調解委員（第19條）。</span><br>
@@ -1080,6 +1115,36 @@ QUERIES:
       <span class="cli-out">調解核定後，當事人得於30日內向法院提起撤銷調解之訴。</span>
     </div>
   </div>
+</div>
+
+<!-- Summary -->
+<div class="section" id="summary">
+  <div class="sec-label">壓力測試 · 總結</div>
+  <h2>四版對比總表</h2>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>版本</th><th>核心架構變更</th><th>Q1</th><th>Q2</th><th>Q3</th><th>平均</th></tr>
+    <tr>
+      <td><strong>v1.0</strong></td>
+      <td>Single-Query + HybridRetrieval + TOP_K=3</td>
+      <td class="score" style="color:var(--danger)">40</td><td class="score" style="color:var(--danger)">15</td><td class="score" style="color:var(--warn)">55</td><td class="score" style="color:var(--danger)">37</td>
+    </tr>
+    <tr>
+      <td><strong>v2.0</strong></td>
+      <td>Adaptive Decomposition（4子查詢）+ Cross-Query RRF + TOP_K=6</td>
+      <td class="score" style="color:var(--warn)">62</td><td class="score" style="color:var(--warn)">55</td><td class="score" style="color:var(--accent)">82</td><td class="score" style="color:var(--warn)">66</td>
+    </tr>
+    <tr>
+      <td><strong>v3.0</strong></td>
+      <td>LLM語意標籤 + 刑/行/民Prompt + Self-Check</td>
+      <td class="score" style="color:var(--warn)">68</td><td class="score" style="color:var(--warn)">70</td><td class="score" style="color:var(--accent)">88</td><td class="score" style="color:var(--warn)">75</td>
+    </tr>
+    <tr style="background:rgba(99,102,241,.06)">
+      <td><strong>v3.1 ✦</strong></td>
+      <td>Fact Extraction + 6子查詢 + TOP_K=8 + TIMEOUT=180s</td>
+      <td class="score" style="color:var(--accent)">74</td><td class="score" style="color:var(--accent)">82</td><td class="score" style="color:var(--accent)">92</td><td class="score grad-text" style="font-size:18px">83</td>
+    </tr>
+  </table></div>
 </div>
 
 <!-- ══════════════════════════════════════ -->
@@ -1140,17 +1205,17 @@ ollama pull qwen2.5:14b</code></pre>
       <span class="cli-out">──────────────────────────────────────────────────</span><br>
       <span class="cli-highlight">[1] 原始問題  ：公司負責人性騷擾員工後降職，三方面責任為何</span><br>
       <span class="cli-out">    事實條件  ：</span><br>
-      <span class="cli-out">      · 行為人：公司負責人（機構首長，権勢性騷擾）</span><br>
+      <span class="cli-out">      · 行為人：公司負責人（機構首長，權勢性騷擾）</span><br>
       <span class="cli-out">      · 附帶行為：降職（差別待遇）</span><br>
       <span class="cli-out">    子查詢數量：6</span><br>
-      <span class="cli-out">    子查詢 1  ：行為人因権勢性騷擾遭受何種刑事罰則</span><br>
-      <span class="cli-out">    子查詢 2  ：行為人因権勢性騷擾遭受何種行政罰則</span><br>
+      <span class="cli-out">    子查詢 1  ：行為人因權勢性騷擾遭受何種刑事罰則</span><br>
+      <span class="cli-out">    子查詢 2  ：行為人因權勢性騷擾遭受何種行政罰則</span><br>
       <span class="cli-out">    子查詢 3  ：被害人得請求之損害賠償及懲罰性賠償金</span><br>
       <span class="cli-out">    子查詢 4  ：公司因未防止事件發生面臨之行政罰鍰</span><br>
       <span class="cli-out">    子查詢 5  ：降職行為可能面臨之行政法律後果</span><br>
       <span class="cli-out">    子查詢 6  ：差別待遇得請求之民事損害賠償</span><br><br>
-      <span class="cli-out">[2] 子查詢檢索：「行為人因権勢性騷擾遭受何種刑事罰則」→ 6 chunks, cosine=0.7821</span><br>
-      <span class="cli-out">    子查詢檢索：「行為人因権勢性騷擾遭受何種行政罰則」→ 6 chunks, cosine=0.7614</span><br>
+      <span class="cli-out">[2] 子查詢檢索：「行為人因權勢性騷擾遭受何種刑事罰則」→ 6 chunks, cosine=0.7821</span><br>
+      <span class="cli-out">    子查詢檢索：「行為人因權勢性騷擾遭受何種行政罰則」→ 6 chunks, cosine=0.7614</span><br>
       <span class="cli-out">    子查詢檢索：「降職行為可能面臨之行政法律後果」→ 6 chunks, cosine=0.7203</span><br>
       <span class="cli-out">    …（並行執行，共 6 條子查詢）</span><br><br>
       <span class="cli-out">[3] Cross-Query RRF：31 unique chunks → Top 8</span><br>
@@ -1176,7 +1241,7 @@ ollama pull qwen2.5:14b</code></pre>
       <span class="cli-out">------------------------------------------------------------</span><br><br>
       <span class="cli-highlight">根據第14條第1項至第2項，申訴期限依情況分為三種：</span><br><br>
       <span class="cli-highlight">1. 一般性騷擾：知悉起 2 年內，自事件起不逾 5 年</span><br>
-      <span class="cli-highlight">2. 権勢性騷擾：知悉起 3 年內，自事件起不逾 7 年</span><br>
+      <span class="cli-highlight">2. 權勢性騷擾：知悉起 3 年內，自事件起不逾 7 年</span><br>
       <span class="cli-highlight">3. 未成年被害人：成年後 3 年內（較長期限者從其規定）</span><br><br>
       <span class="cli-out">------------------------------------------------------------</span><br>
       <span class="cli-out">來源法條：</span><br>
