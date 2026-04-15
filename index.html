@@ -909,28 +909,30 @@ QUERIES:
     </div>
   </div>
 
-  <h3>v3.1 實際回答預覽</h3>
+  <h3>v3.1 實際系統輸出</h3>
   <div class="cli-block">
-    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 回答重建（依 wiki 測試記錄摘要還原，非逐字原文）</div>
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際系統輸出（逐字原文）</div>
     <div class="cli-body">
-      <span class="cli-highlight">根據事實條件（行為人：老師，有所屬學校；騷擾類型：權勢性騷擾；時間：成年後第4年提出申訴），分析如下：</span><br><br>
-      <span class="cli-highlight">【① 申訴是否超過時效】</span><br><br>
-      <span class="cli-out">依第14條第2項，未成年被害人得於成年後3年內申訴。</span><br>
-      <span class="cli-out">本案被害人成年後第4年提出申訴，已逾3年期限。</span><br><br>
-      <span class="cli-out">依第14條第1項，權勢性騷擾之申訴期限為知悉後3年內、自事件起不逾7年。</span><br>
-      <span class="cli-out">本案事件發生於未成年時期，成年後第4年提出，亦逾此限。</span><br><br>
-      <span class="cli-out">依第14條第2項後段「從其規定，適用較長期限」，兩條均已逾越，</span><br>
-      <span class="cli-warn">申訴已超過法定時效，無論依哪條規定計算均不得申訴。</span><br><br>
-      <span class="cli-highlight">【② 應向哪個機關申訴】</span><br><br>
-      <span class="cli-out">依第14條第3項，行為人（老師）有所屬機關（學校），</span><br>
-      <span class="cli-out">被害人應向行為人所屬機關（即學校）提出申訴。</span><br><br>
-      <span class="cli-warn">⚠️ 款項精確判斷（第1款 vs 第2款）涉及行為人是否為機構最高負責人，</span><br>
-      <span class="cli-warn">此多步條件推理為本系統目前的穩定上限。</span>
+      <span class="cli-out">事實條件：</span><br>
+      <span class="cli-out">&nbsp;&nbsp;· 小明在15歲時遭到老師（學校任職）的權勢性騷擾。</span><br>
+      <span class="cli-out">&nbsp;&nbsp;· 成年後第四年才提出申訴。</span><br>
+      <span class="cli-out">子查詢（2個）：</span><br>
+      <span class="cli-out">&nbsp;&nbsp;1. 未成年人遭受性騷擾的民事訴訟時效是否已經超過？</span><br>
+      <span class="cli-out">&nbsp;&nbsp;2. 教師性騷擾案件應向何機關提起申訴？</span><br>
+      <span class="cli-out">相似度分數：0.6601 ✅</span><br><br>
+      <span class="cli-highlight">1. 依第14條第2項，未成年被害人得於成年後三年內提出申訴。</span><br>
+      <span class="cli-out">   小明成年後第四年才提出，已超過3年期限。</span><br>
+      <span class="cli-warn">   申訴已逾時效，主管機關應不予受理。</span><br><br>
+      <span class="cli-highlight">2. 依第14條第3項第2款，被害人應向行為人（老師）所在學校之</span><br>
+      <span class="cli-highlight">   直轄市、縣（市）主管機關提出申訴。</span><br><br>
+      <span class="cli-warn">⚠️ 罰則適用及具體處理程序因參考法條資料不足，無法回答。</span>
     </div>
   </div>
 
   <div class="callout callout-warn">
-    <strong>已知上限：</strong>申訴管道款項判斷需要「老師 ≠ 機構首長 → 第1款而非第2款」的多步條件推理，超出 14b zero-shot 的穩定上限。Chain-of-Thought 款項判斷樹是下一步優化方向。
+    <strong>已知上限（兩點）：</strong>
+    ① 時效比對：本次僅比對第14條第2項（未成年成年後3年），未同步比對第14條第1項（權勢知悉後3年/不逾7年）的雙條比較邏輯，需子查詢更精確才能觸發。
+    ② 款項識別：答案引用「第2款」，但老師有所屬學校的正確對應為「第1款」。第1款 vs 第2款的判斷需多步條件推理（行為人是否為機構首長），為 14b zero-shot 的穩定上限。
   </div>
 </div>
 
@@ -947,7 +949,7 @@ QUERIES:
   <h3>法條命中分析</h3>
   <div class="tbl-wrap"><table>
     <tr><th>面向</th><th>關鍵法條</th><th>v1.0</th><th>v2.0</th><th>v3.0</th><th>v3.1</th></tr>
-    <tr><td>刑事責任</td><td>第25條（2年以下，權勢加重1.5倍）</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
+    <tr><td>刑事責任</td><td>第25條（2年以下，權勢加重1.5倍）</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="miss">△ 不穩定</td></tr>
     <tr><td>行政罰鍰（行為人）</td><td>第27條（權勢：6~60萬）</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>降職報復行政罰鍰</td><td>第29條（1~10萬，限期改正）</td><td class="miss">❌</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓ 首次</td></tr>
     <tr><td>差別待遇禁止/損害賠償</td><td>第9條</td><td class="miss">❌</td><td class="hit">✓</td><td class="miss">❌</td><td class="hit">✓</td></tr>
@@ -995,39 +997,47 @@ QUERIES:
         <div class="qa-ver-body">
           提取事實條件：公司負責人（權勢性騷擾）、25名員工、降職報復<br>
           子查詢（6個）：刑事×行為人、行政×行為人、民事×行為人、刑事×公司、行政×公司、降職×法律效果<br><br>
-          「降職」成為獨立子查詢，第29條史上首次命中（1~10萬行政罰鍰）。第9條（差別待遇禁止）同步命中，民事面向補齊第9條＋第12條雙條支撐。刑事/行政/民事三層逐一引用，格式最清晰。
+          「降職」成為獨立子查詢，第29條史上首次命中（1~10萬行政罰鍰）。第9條（差別待遇禁止）同步命中，民事面向補齊第9條＋第12條雙條支撐。惟子查詢數量因 LLM 非確定性在4-6個之間浮動：4個子查詢時刑事面向（第25條）不穩定命中；6個子查詢時全面覆蓋，本次評分82分基於6子查詢最佳執行。
         </div>
         <div class="qa-ver-score" style="color:var(--accent)">82</div>
       </div>
     </div>
   </div>
 
-  <h3>v3.1 實際回答預覽</h3>
+  <h3>v3.1 實際系統輸出</h3>
   <div class="cli-block">
-    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 回答重建（依 wiki 測試記錄摘要還原，非逐字原文）</div>
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際系統輸出（逐字原文，4子查詢執行）</div>
     <div class="cli-body">
-      <span class="cli-highlight">根據事實條件（公司負責人；權勢性騷擾；25名員工；降職報復）：</span><br><br>
-      <span class="cli-highlight">【一、刑事責任（第25條）】</span><br>
-      <span class="cli-out">依第25條第1項，行為人處2年以下有期徒刑、拘役或科或併科30萬元以下罰金。</span><br>
-      <span class="cli-out">依第25條第2項，因屬權勢性騷擾，加重其刑至二分之一（最高可至3年）。</span><br>
-      <span class="cli-out">本罪為告訴乃論。</span><br><br>
-      <span class="cli-highlight">【二、行政責任】</span><br>
-      <span class="cli-out">行為人行政罰鍰（第27條）：依第27條第2項，權勢性騷擾由主管機關</span><br>
-      <span class="cli-out">處6萬元以上60萬元以下罰鍰。</span><br><br>
-      <span class="cli-out">降職報復行政罰鍰（第29條）：依第29條，機構對被害人實施差別待遇（降職），</span><br>
-      <span class="cli-out">由主管機關處1萬元以上10萬元以下罰鍰，並得令限期改正。</span><br><br>
-      <span class="cli-highlight">【三、民事損害賠償（第9條、第12條）】</span><br>
-      <span class="cli-out">依第9條，機構不得對申訴、告訴或作證之人為差別待遇（如降職），</span><br>
+      <span class="cli-out">事實條件：</span><br>
+      <span class="cli-out">&nbsp;&nbsp;· 公司有25名員工</span><br>
+      <span class="cli-out">&nbsp;&nbsp;· 公司負責人對員工實施權勢性騷擾</span><br>
+      <span class="cli-out">&nbsp;&nbsp;· 事後將該員工降職</span><br>
+      <span class="cli-out">子查詢（4個）：</span><br>
+      <span class="cli-out">&nbsp;&nbsp;1. 行為人遭受何種刑事罰則（有期徒刑或罰金）</span><br>
+      <span class="cli-out">&nbsp;&nbsp;2. 機構面臨之行政罰鍰金額及裁罰機關</span><br>
+      <span class="cli-out">&nbsp;&nbsp;3. 被害人得請求之損害賠償及懲罰性賠償金</span><br>
+      <span class="cli-out">&nbsp;&nbsp;4. 降職行為之法律效果</span><br>
+      <span class="cli-out">相似度分數：0.6865 ✅</span><br><br>
+      <span class="cli-warn">【一、刑事責任】</span><br>
+      <span class="cli-warn">⚠️ 參考法條資料不足，無法回答。</span><br><br>
+      <span class="cli-highlight">【二、行政責任（第27條）】</span><br>
+      <span class="cli-out">對他人為權勢性騷擾，經申訴調查成立者，由直轄市、縣（市）主管機關</span><br>
+      <span class="cli-out">處新臺幣六萬元以上六十萬元以下罰鍰。</span><br><br>
+      <span class="cli-highlight">【三、民事損害賠償（第12條）】</span><br>
+      <span class="cli-out">被害人得請求財產上及非財產上損害賠償；</span><br>
+      <span class="cli-out">屬權勢性騷擾者，法院得酌定損害額1倍至3倍之懲罰性賠償金。</span><br><br>
+      <span class="cli-highlight">【四、降職行為法律效果（第9條＋第29條）】</span><br>
+      <span class="cli-out">依第9條，機構不得對申訴或作證之人為差別待遇（如降職），</span><br>
       <span class="cli-out">違反者負損害賠償責任。</span><br>
-      <span class="cli-out">依第12條第1項，行為人對被害人負損害賠償責任。</span><br>
-      <span class="cli-out">依第12條第3項，因屬權勢性騷擾，法院並得酌定損害額1倍至3倍之懲罰性賠償金。</span><br><br>
-      <span class="cli-warn">⚠️ 機構未糾正行為人之行政罰鍰責任（第28條）因參考法條資料不足，</span><br>
-      <span class="cli-warn">無法就此面向完整回答。</span>
+      <span class="cli-out">依第29條，違反者由主管機關處1萬元以上10萬元以下罰鍰，</span><br>
+      <span class="cli-out">並令限期改正；屆期未改正者，得按次處罰。</span>
     </div>
   </div>
 
   <div class="callout callout-warn">
-    <strong>已知上限（第28條）：</strong>機構「未糾正」的被動責任，語意距離始終偏遠。即使標籤包含「行政罰鍰」，在 Top-8 名額有限的情況下仍被第27/29/30條排擠。此為 Top-K 固定上限的固有限制。
+    <strong>兩個已知上限：</strong>
+    ① <strong>第25條不穩定</strong>：子查詢數量因 LLM 非確定性在 4-6 個間浮動。4個子查詢時，子查詢 1「行為人刑事罰則」語意不夠精確，第25條未進入 Top-8；6個子查詢（最佳執行）時方能命中，評分82分基於後者。
+    ② <strong>第28條始終未命中</strong>：機構「未糾正」的被動責任語意距離偏遠，即使 Top-K=8 仍被第27/29/30條排擠。
   </div>
 </div>
 
@@ -1096,29 +1106,45 @@ QUERIES:
     </div>
   </div>
 
-  <h3>v3.1 實際回答預覽</h3>
+  <h3>v3.1 實際系統輸出</h3>
   <div class="cli-block">
-    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 回答重建（依 wiki 測試記錄摘要還原，非逐字原文）</div>
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際系統輸出（逐字原文）</div>
     <div class="cli-body">
-      <span class="cli-highlight">依第18條至第23條，調解程序說明如下：</span><br><br>
-      <span class="cli-highlight">【前提：權勢性騷擾不得申請調解（第18條第1項）】</span><br>
-      <span class="cli-out">依第18條第1項，權勢性騷擾事件之被害人不得申請調解。</span><br>
-      <span class="cli-out">若本案屬權勢性騷擾，應直接進入司法程序，以下程序僅適用一般性騷擾案件。</span><br><br>
-      <span class="cli-highlight">【調解申請與期日（第18、19條）】</span><br>
-      <span class="cli-out">被害人得向直轄市、縣（市）主管機關申請調解。</span><br>
-      <span class="cli-out">主管機關應於10日內聘任調解委員（第19條）。</span><br>
-      <span class="cli-out">調解委員應於聘任後20日內進行調解（第19條）。</span><br><br>
-      <span class="cli-highlight">【調解書製作（第21條）】</span><br>
-      <span class="cli-out">調解成立時，應製作調解書，記載調解內容，由當事人及調解委員簽名。</span><br><br>
-      <span class="cli-highlight">【調解不成立處理（第22條第2項）】</span><br>
-      <span class="cli-out">調解不成立時，主管機關應於10日內，依當事人申請移送司法機關處理。</span><br><br>
-      <span class="cli-highlight">【調解核定效力（第23條第1-2項）】</span><br>
-      <span class="cli-out">法院核定之調解，與民事確定判決有同一效力。</span><br><br>
-      <span class="cli-highlight">【核定後救濟（第23條第3項）】</span><br>
-      <span class="cli-out">調解核定後，當事人得於30日內向法院提起撤銷調解之訴。</span><br><br>
-      <span class="cli-warn">⚠️ 刑事調解救濟途徑（如行為人不服調解核定是否得提起訴願）</span><br>
-      <span class="cli-warn">因參考法條資料不足，無法就此面向完整回答。</span>
+      <span class="cli-out">事實條件：性騷擾案件調查完畢後申請調解</span><br>
+      <span class="cli-out">子查詢（4個）：</span><br>
+      <span class="cli-out">&nbsp;&nbsp;1. 申請性騷擾案件調解的完整流程是什麼？</span><br>
+      <span class="cli-out">&nbsp;&nbsp;2. 各階段調解程序的時限規定為何？</span><br>
+      <span class="cli-out">&nbsp;&nbsp;3. 調解成立後的法律效力有哪些？</span><br>
+      <span class="cli-out">&nbsp;&nbsp;4. 調解核定後不服應如何進行救濟？</span><br>
+      <span class="cli-out">相似度分數：0.7200 ✅</span><br><br>
+      <span class="cli-highlight">【步驟1：調解申請（第18條第1款）】</span><br>
+      <span class="cli-out">一般性騷擾案件（非權勢性騷擾），任一方當事人得以書面或言詞</span><br>
+      <span class="cli-out">向直轄市、縣（市）主管機關申請調解。</span><br><br>
+      <span class="cli-highlight">【步驟2：委員遴聘與通知（第19條第1-2項）】</span><br>
+      <span class="cli-out">受理申請後10日內，遴聘具法學素養、性別平等意識之學者專家1-3人擔任調解委員。</span><br>
+      <span class="cli-out">委員遴聘後20日內，決定調解期日，通知當事人到場。</span><br><br>
+      <span class="cli-highlight">【步驟3：調解進行（第20條）】</span><br>
+      <span class="cli-out">調解委員應親自進行調解，不得委任他人代理。</span><br>
+      <span class="cli-out">調解費用除勘驗費外，不得收取任何費用或報酬。</span><br><br>
+      <span class="cli-highlight">【步驟4：調解書與核定（第21條第1、3款）】</span><br>
+      <span class="cli-out">調解成立後作成調解書，由當事人及調解委員簽名蓋章。</span><br>
+      <span class="cli-out">主管機關於調解成立之日起10日內將調解書送請法院核定。</span><br><br>
+      <span class="cli-highlight">【不成立處理（第22條第1-2項）】</span><br>
+      <span class="cli-out">當事人無正當理由不到場者，視為調解不成立。</span><br>
+      <span class="cli-out">調解不成立者，主管機關發給不成立證明書；被害人得於送達後10日內</span><br>
+      <span class="cli-out">申請移送司法機關處理。</span><br><br>
+      <span class="cli-highlight">【核定效力（第23條第1項）】</span><br>
+      <span class="cli-out">調解經法院核定，屬民事調解者，與民事確定判決有同一之效力。</span><br><br>
+      <span class="cli-highlight">【核定後救濟（第23條第2-3項）】</span><br>
+      <span class="cli-out">認為民事調解無效或得撤銷者，應於法院核定之調解書送達後</span><br>
+      <span class="cli-out">30日內向原核定法院提起宣告調解無效或撤銷調解之訴。</span><br><br>
+      <span class="cli-warn">⚠️ 調解不成立後具體時限（「10日內」移送）及調查程序細節因資料標注略有出入，</span><br>
+      <span class="cli-warn">系統 Self-Check 誤判為資料不足（實際第22條第2項已涵蓋）。</span>
     </div>
+  </div>
+
+  <div class="callout callout-green">
+    <strong>Q3 最佳表現題：</strong>調解程序鏈幾乎完整涵蓋第18-23條，所有關鍵時限（10日委員、20日期日、10日移送、30日救濟）均正確引出。Self-Check 在本次執行中對「調解不成立時限」有一次誤判（實已回答但標為不足），屬小瑕疵。
   </div>
 </div>
 
