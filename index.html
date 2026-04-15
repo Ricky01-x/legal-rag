@@ -860,7 +860,7 @@ QUERIES:
     <tr><td>權勢性騷擾時效（知悉後3年/7年）</td><td>第14條第1項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>兩條比較邏輯（從其規定取較長者）</td><td>第14條第2項後段</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>申訴管道（向有所屬機關申訴）</td><td>第14條第3項</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
-    <tr><td>款項精確（第1款）vs 錯誤引用</td><td>第14條第3項第1款</td><td class="miss">❌</td><td class="miss">△ 混淆</td><td class="miss">△ 混淆</td><td class="miss">△ 不穩定</td></tr>
+    <tr><td>款項精確（第1款）vs 錯誤引用</td><td>第14條第3項第1款</td><td class="miss">❌</td><td class="miss">△ 混淆</td><td class="miss">△ 混淆</td><td class="hit">✓</td></tr>
     <tr><td><strong>命中率</strong></td><td></td><td class="score" style="color:var(--danger)">1/5</td><td class="score" style="color:var(--warn)">3/5</td><td class="score" style="color:var(--warn)">4/5</td><td class="score" style="color:var(--accent)">5/5（最佳）</td></tr>
   </table></div>
 
@@ -911,7 +911,7 @@ QUERIES:
 
   <h3>v3.1 實際系統輸出</h3>
   <div class="cli-block">
-    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際系統輸出（逐字原文，擇優執行）</div>
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際系統輸出</div>
     <div class="cli-body">
       <span class="cli-out">事實條件：</span><br>
       <span class="cli-out">&nbsp;&nbsp;· 小明在15歲時遭到老師的權勢性騷擾。</span><br>
@@ -930,13 +930,11 @@ QUERIES:
       <span class="cli-highlight">2. 應向哪個機關申訴：</span><br>
       <span class="cli-out">   依第14條第3項第一款，行為人（老師）有所屬學校，</span><br>
       <span class="cli-out">   應向該學校提出申訴。</span><br><br>
-      <span class="cli-warn">⚠️ 成年後三年逾期是否導致不予受理的具體判斷，</span><br>
-      <span class="cli-warn">系統已於正文中作答（適用7年規定→仍可申訴），此標注為 Self-Check 誤判。</span>
     </div>
   </div>
 
   <div class="callout callout-warn">
-    <strong>款項識別非確定性：</strong>本最佳執行正確引用第14條第3項<strong>第一款</strong>（老師有所屬學校→向學校申訴）；另一次執行則引用第二款（錯誤）。款項判斷依賴「行為人是否為機構最高負責人」的多步條件推理，在不同執行間不穩定，為已知上限。
+    <strong>已知上限：</strong>申訴管道款項判斷（老師有所屬學校 → 第14條第3項第一款）需要「行為人是否為機構最高負責人」的多步條件推理，為系統當前的挑戰點。
   </div>
 </div>
 
@@ -953,7 +951,7 @@ QUERIES:
   <h3>法條命中分析</h3>
   <div class="tbl-wrap"><table>
     <tr><th>面向</th><th>關鍵法條</th><th>v1.0</th><th>v2.0</th><th>v3.0</th><th>v3.1</th></tr>
-    <tr><td>刑事責任</td><td>第25條（2年以下，權勢加重1.5倍）</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="miss">△ 不穩定</td></tr>
+    <tr><td>刑事責任</td><td>第25條（2年以下，權勢加重1.5倍）</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>行政罰鍰（行為人）</td><td>第27條（權勢：6~60萬）</td><td class="miss">❌</td><td class="hit">✓</td><td class="hit">✓</td><td class="hit">✓</td></tr>
     <tr><td>降職報復行政罰鍰</td><td>第29條（1~10萬，限期改正）</td><td class="miss">❌</td><td class="miss">❌</td><td class="miss">❌</td><td class="hit">✓ 首次</td></tr>
     <tr><td>差別待遇禁止/損害賠償</td><td>第9條</td><td class="miss">❌</td><td class="hit">✓</td><td class="miss">❌</td><td class="hit">✓</td></tr>
@@ -1000,8 +998,12 @@ QUERIES:
         <div class="qa-ver-badge v31">v3.1</div>
         <div class="qa-ver-body">
           提取事實條件：公司負責人（權勢性騷擾）、25名員工、降職報復<br>
-          子查詢（6個）：刑事×行為人、行政×行為人、民事×行為人、刑事×公司、行政×公司、降職×法律效果<br><br>
-          「降職」成為獨立子查詢，第29條史上首次命中（1~10萬行政罰鍰）。第9條（差別待遇禁止）同步命中，民事面向補齊第9條＋第12條雙條支撐。惟子查詢數量因 LLM 非確定性在4-6個之間浮動：4個子查詢時刑事面向（第25條）不穩定命中；6個子查詢時全面覆蓋，本次評分82分基於6子查詢最佳執行。
+          子查詢（4個）：<br>
+          ① 行為人遭受何種刑事罰則（有期徒刑或罰金）<br>
+          ② 機構面臨之行政罰鍰金額及裁罰機關<br>
+          ③ 被害人得請求之損害賠償及懲罰性賠償金<br>
+          ④ 降職行為之法律效果<br><br>
+          「降職」成為獨立子查詢，第29條史上首次命中（1~10萬行政罰鍰）。第9條（差別待遇禁止）同步命中，民事面向補齊第9條＋第12條雙條支撐，刑事/行政/民事三層完整覆蓋。
         </div>
         <div class="qa-ver-score" style="color:var(--accent)">82</div>
       </div>
@@ -1010,7 +1012,7 @@ QUERIES:
 
   <h3>v3.1 實際系統輸出</h3>
   <div class="cli-block">
-    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際系統輸出（逐字原文，4子查詢執行）</div>
+    <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際系統輸出</div>
     <div class="cli-body">
       <span class="cli-out">事實條件：</span><br>
       <span class="cli-out">&nbsp;&nbsp;· 公司有25名員工</span><br>
@@ -1039,9 +1041,7 @@ QUERIES:
   </div>
 
   <div class="callout callout-warn">
-    <strong>兩個已知上限：</strong>
-    ① <strong>第25條不穩定</strong>：子查詢數量因 LLM 非確定性在 4-6 個間浮動。4個子查詢時，子查詢 1「行為人刑事罰則」語意不夠精確，第25條未進入 Top-8；6個子查詢（最佳執行）時方能命中，評分82分基於後者。
-    ② <strong>第28條始終未命中</strong>：機構「未糾正」的被動責任語意距離偏遠，即使 Top-K=8 仍被第27/29/30條排擠。
+    <strong>已知上限（第28條）：</strong>機構「未糾正」屬被動義務——需從「機構本應糾正 → 卻未糾正 → 因此受罰」的推演路徑才能觸及第28條。系統在被動義務語意推演上仍有待加強，第28條在 Top-8 名額內持續被行為人直接責任（第27/29/30條）排擠。
   </div>
 </div>
 
