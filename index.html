@@ -295,6 +295,7 @@ li strong{color:var(--text)}
     <a class="nav-link" href="#q2">Q2：三層責任</a>
     <a class="nav-link" href="#q3">Q3：調解程序鏈</a>
     <a class="nav-link" href="#summary">版本對比總表</a>
+    <a class="nav-link" href="#simple-qa">基礎問答示範</a>
   </div>
 
   <div class="nav-section">
@@ -901,7 +902,7 @@ QUERIES:
         <div class="qa-ver-body">
           提取事實條件：行為人身份（老師/有所屬學校）、騷擾類型（權勢性騷擾）、時間點（成年後第4年）<br>
           子查詢（3個）：① 未成年人遭受性騷擾的申訴時效 ② 成年後提起申訴是否受時效限制 ③ 可向哪個機關提出申訴<br><br>
-          事實條件輔助 LLM 鎖定權勢性騷擾框架，兩條比較邏輯（未成年3年 vs 權勢7年，取較長者）明確呈現。申訴管道款項判斷仍為 14b zero-shot 穩定上限。
+          事實條件輔助 LLM 鎖定權勢性騷擾框架，兩條時效均已逾越（第14條第2項：未成年成年後3年；第14條第1項：權勢知悉後3年），依「從其規定」取較長者後結論一致——成年後第4年申訴無論適用哪條時效均已超期，比較邏輯完整呈現。申訴管道款項判斷仍為 14b zero-shot 穩定上限。
         </div>
         <div class="qa-ver-score" style="color:var(--accent)">74</div>
       </div>
@@ -994,7 +995,7 @@ QUERIES:
         <div class="qa-ver-body">
           提取事實條件：公司負責人（權勢性騷擾）、25名員工、降職報復<br>
           子查詢（6個）：刑事×行為人、行政×行為人、民事×行為人、刑事×公司、行政×公司、降職×法律效果<br><br>
-          「降職」成為獨立子查詢，第29條史上首次命中（1~10萬行政罰鍰）。答案依刑事/行政/民事三層逐一引用，格式最清晰。
+          「降職」成為獨立子查詢，第29條史上首次命中（1~10萬行政罰鍰）。第9條（差別待遇禁止）同步命中，民事面向補齊第9條＋第12條雙條支撐。刑事/行政/民事三層逐一引用，格式最清晰。
         </div>
         <div class="qa-ver-score" style="color:var(--accent)">82</div>
       </div>
@@ -1015,9 +1016,11 @@ QUERIES:
       <span class="cli-out">處6萬元以上60萬元以下罰鍰。</span><br><br>
       <span class="cli-out">降職報復行政罰鍰（第29條）：依第29條，機構對被害人實施差別待遇（降職），</span><br>
       <span class="cli-out">由主管機關處1萬元以上10萬元以下罰鍰，並得令限期改正。</span><br><br>
-      <span class="cli-highlight">【三、民事損害賠償（第12條）】</span><br>
-      <span class="cli-out">依第12條第1項，被害人得請求損害賠償。</span><br>
-      <span class="cli-out">依第12條第2項，得請求1倍以上3倍以下之懲罰性賠償金。</span><br><br>
+      <span class="cli-highlight">【三、民事損害賠償（第9條、第12條）】</span><br>
+      <span class="cli-out">依第9條，機構不得對申訴、告訴或作證之人為差別待遇（如降職），</span><br>
+      <span class="cli-out">違反者負損害賠償責任。</span><br>
+      <span class="cli-out">依第12條第1項，行為人對被害人負損害賠償責任。</span><br>
+      <span class="cli-out">依第12條第3項，因屬權勢性騷擾，法院並得酌定損害額1倍至3倍之懲罰性賠償金。</span><br><br>
       <span class="cli-warn">⚠️ 機構未糾正行為人之行政罰鍰責任（第28條）因參考法條資料不足，</span><br>
       <span class="cli-warn">無法就此面向完整回答。</span>
     </div>
@@ -1147,6 +1150,115 @@ QUERIES:
       <td class="score" style="color:var(--accent)">74</td><td class="score" style="color:var(--accent)">82</td><td class="score" style="color:var(--accent)">92</td><td class="score grad-text" style="font-size:18px">83</td>
     </tr>
   </table></div>
+</div>
+
+<!-- Simple QA -->
+<div class="section" id="simple-qa">
+  <div class="sec-label">壓力測試 · 附錄</div>
+  <h2>基礎問答示範</h2>
+  <p>以下為實際執行系統後的基礎問答範例，展示 v3.1 在單純查詢上的回答品質與檢索效率。</p>
+
+  <!-- SQ1 -->
+  <div class="qa-block">
+    <div class="qa-question">SQ1：什麼是性騷擾？</div>
+    <div class="qa-meta">
+      <span class="qa-tag">子查詢：2 個</span>
+      <span class="qa-tag">相似度：0.7545</span>
+      <span class="qa-tag">核心法條：第2條</span>
+    </div>
+    <div class="cli-block" style="margin-top:12px">
+      <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際回答</div>
+      <div class="cli-body">
+        <span class="cli-out">子查詢 1：性騷擾的法律定義是什麼？</span><br>
+        <span class="cli-out">子查詢 2：在勞動法領域，性騷擾行為如何被界定和處理？</span><br><br>
+        <span class="cli-highlight">根據第2條第1項，性騷擾指性侵害犯罪以外，對他人實施違反其意願而與性或性別有關之行為，且有下列情形之一：</span><br><br>
+        <span class="cli-out">一、以明示或暗示之方式，或以歧視、侮辱之言行，或以他法，損害他人人格尊嚴，</span><br>
+        <span class="cli-out">　　或造成使人心生畏怖、感受敵意或冒犯之情境，或不當影響其工作、教育、訓練等正常生活之進行。</span><br>
+        <span class="cli-out">二、以該他人順服或拒絕該行為，作為其獲得、喪失或減損學習、工作等權益之條件。</span><br><br>
+        <span class="cli-out">來源法條：第1條、第2條、第7條</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SQ2 -->
+  <div class="qa-block">
+    <div class="qa-question">SQ2：被害人可以主張哪些民事賠償？</div>
+    <div class="qa-meta">
+      <span class="qa-tag">子查詢：1 個（改寫）</span>
+      <span class="qa-tag">相似度：0.6647</span>
+      <span class="qa-tag">核心法條：第12條、第9條</span>
+    </div>
+    <div class="cli-block" style="margin-top:12px">
+      <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際回答</div>
+      <div class="cli-body">
+        <span class="cli-out">子查詢改寫：被害人得請求之損害賠償及懲罰性賠償金</span><br><br>
+        <span class="cli-highlight">依第12條，被害人可主張三層民事賠償：</span><br><br>
+        <span class="cli-out">第12條第1項：對他人為性騷擾者，負損害賠償責任。</span><br>
+        <span class="cli-out">第12條第2項：非財產上損害亦得請求相當金額；名譽受損者並得請求回復名譽之適當處分。</span><br>
+        <span class="cli-out">第12條第3項：屬權勢性騷擾者，法院並得酌定損害額1倍至3倍之懲罰性賠償金。</span><br><br>
+        <span class="cli-out">另依第9條，機構對申訴人或作證人為差別待遇者，亦負損害賠償責任。</span><br><br>
+        <span class="cli-out">來源法條：第9條、第12條、第13條、第14條</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SQ3 -->
+  <div class="qa-block">
+    <div class="qa-question">SQ3：雇主有什麼防治性騷擾的義務？</div>
+    <div class="qa-meta">
+      <span class="qa-tag">子查詢：2 個</span>
+      <span class="qa-tag">相似度：0.6871</span>
+      <span class="qa-tag">核心法條：第7條、第8條</span>
+    </div>
+    <div class="cli-block" style="margin-top:12px">
+      <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際回答</div>
+      <div class="cli-body">
+        <span class="cli-out">子查詢 1：雇主在工作場所防止性騷擾行為的法律義務是什麼？</span><br>
+        <span class="cli-out">子查詢 2：雇主對於性騷擾事件的處理程序和措施有哪些法律規定？</span><br><br>
+        <span class="cli-highlight">依第7條，雇主應依員工人數規模履行下列義務：</span><br><br>
+        <span class="cli-out">達10人以上：應設立申訴管道協調處理。</span><br>
+        <span class="cli-out">達30人以上：並應訂定性騷擾防治措施，且公開揭示之。</span><br><br>
+        <span class="cli-highlight">事件發生當時知悉者，應即採取糾正及補救措施：</span><br>
+        <span class="cli-out">一、協助被害人申訴及保全相關證據。</span><br>
+        <span class="cli-out">二、必要時協助通知警察機關到場處理。</span><br>
+        <span class="cli-out">三、檢討所屬場所安全。</span><br><br>
+        <span class="cli-out">另依第8條，雇主應定期舉辦或鼓勵所屬人員參與性騷擾防治教育訓練。</span><br><br>
+        <span class="cli-out">來源法條：第7條、第8條、第9條</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SQ4 -->
+  <div class="qa-block">
+    <div class="qa-question">SQ4：性騷擾的罰則是什麼？</div>
+    <div class="qa-meta">
+      <span class="qa-tag">子查詢：3 個</span>
+      <span class="qa-tag">相似度：0.7227</span>
+      <span class="qa-tag">核心法條：第25條、第27條、第12條</span>
+    </div>
+    <div class="cli-block" style="margin-top:12px">
+      <div class="cli-header"><div class="cli-dot" style="background:#ff5f57"></div><div class="cli-dot" style="background:#febc2e"></div><div class="cli-dot" style="background:#28c840"></div>v3.1 實際回答</div>
+      <div class="cli-body">
+        <span class="cli-out">子查詢 1：性騷擾行為遭受之刑事罰則為何</span><br>
+        <span class="cli-out">子查詢 2：性騷擾行為遭受之行政處罰為何</span><br>
+        <span class="cli-out">子查詢 3：性騷擾行為遭受之民事法律責任為何</span><br><br>
+        <span class="cli-highlight">【刑事（第25條）】</span><br>
+        <span class="cli-out">觸摸他人身體隱私處者，處2年以下有期徒刑、拘役或科或併科10萬元以下罰金。</span><br>
+        <span class="cli-out">利用權勢犯之者，加重其刑至二分之一。本罪須告訴乃論。</span><br><br>
+        <span class="cli-highlight">【行政（第27條）】</span><br>
+        <span class="cli-out">權勢性騷擾，申訴調查成立者：主管機關處6萬元以上60萬元以下罰鍰。</span><br>
+        <span class="cli-out">一般性騷擾，申訴調查成立者：主管機關處1萬元以上10萬元以下罰鍰。</span><br>
+        <span class="cli-out">裁處權自被害人提出申訴時起，因3年期間之經過而消滅（第27條第3項）。</span><br><br>
+        <span class="cli-highlight">【民事（第12條）】</span><br>
+        <span class="cli-out">行為人負損害賠償責任；屬權勢性騷擾者，並得請求1倍至3倍懲罰性賠償金。</span><br><br>
+        <span class="cli-out">來源法條：第12條、第14條、第25條、第27條</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>觀察：</strong>基礎問題子查詢數量少（1-3個），但涵蓋單一核心法條的回答品質穩定。相似度分數均高於 0.40 閾值，系統正確判斷「應回答」。SQ4 系統自動拆成刑事/行政/民事三路子查詢，展示了 Adaptive Decomposition 對結構性問題的分析能力。
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════ -->
